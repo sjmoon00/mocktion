@@ -137,13 +137,14 @@ notion-mockserver/
 
 ### Phase 2: 목서버 + CLI 통합
 
-- [ ] `routeRegistry.ts` — `{var}` → `:var` 변환 + 동적 라우트 등록
-- [ ] `routeRegistry.ts` — 핸들러: 204는 빈 본문(Content-Type 생략), 그 외 hasBody=false는 `'{}'`
-- [ ] `routeRegistry.ts` — `cors()` 전역 적용
-- [ ] `routeRegistry.ts` — 중복 Method+URI 감지 + 경고
-- [ ] `routeRegistry.ts` — 404 폴백 핸들러 (등록 엔드포인트 힌트 포함)
-- [ ] `server.ts` — 기동 로그 (스펙 4.4절 출력 형식)
-- [ ] `index.ts` — Commander(`--db` 필수, `--status`, `--port` 기본 8080) → 파싱 → 조립 → 기동
+- [x] `pageParser.ts` — Phase 1 파서들을 묶는 오케스트레이터(신규, 계획서 구조엔 있었으나 Phase 1 체크리스트에서 누락됐던 항목) 추가
+- [x] `routeRegistry.ts` — `{var}` → `:var` 변환 + 동적 라우트 등록
+- [x] `routeRegistry.ts` — 핸들러: 204는 빈 본문(Content-Type 생략), 그 외 hasBody=false는 `'{}'`
+- [x] `routeRegistry.ts` — `cors()` 전역 적용
+- [x] `routeRegistry.ts` — 중복 Method+URI 감지 + 경고
+- [x] `routeRegistry.ts` — 404 폴백 핸들러 (등록 엔드포인트 힌트 포함)
+- [x] `server.ts` — 기동 로그 (스펙 4.4절 출력 형식)
+- [x] `index.ts` — Commander(`--db` 필수, `--status`, `--port` 기본 8080) → 파싱 → 조립 → 기동
 
 ### Phase 3: 마무리
 
@@ -159,9 +160,9 @@ notion-mockserver/
 
 - **단위**: `npm test` — 실 Notion 응답 fixture로 파서 회귀 검증
 - **E2E (실 DB)**: `npm run dev -- --db {실제 DB URL} --status 완료` 기동 후:
-  - [ ] `curl http://localhost:8080/contests/1/submissions/12` → 명세의 JSON 그대로 반환
-  - [ ] 204 엔드포인트 → 빈 본문 + Content-Type 없음
-  - [ ] 본문 미문서화 POST → `201` + `{}`
-  - [ ] 미등록 경로 → 404 + 힌트 JSON
-  - [ ] 브라우저 콘솔에서 `fetch()` 호출로 CORS 동작 확인
-  - [ ] 콘솔 출력: 스킵 페이지 목록, 등록 엔드포인트/에러 케이스 개수 표시 확인
+  - [x] `curl http://localhost:8123/contests` → 명세의 JSON 그대로 반환 (실 DB 120페이지, 119개 엔드포인트 등록 확인)
+  - [x] 204 엔드포인트(`DELETE /admin/teams/{teamId}/awards`) → 빈 본문 + Content-Type 없음
+  - [x] 본문 미문서화 POST → 실제로는 `POST /teams`가 `{"teamId": 1}` JSON 예시를 갖고 있어 `201` + 해당 JSON 반환 확인 (3순위 빈 객체 폴백 경로는 fixture 단위 테스트로 별도 검증됨)
+  - [x] 미등록 경로 → 404 + 등록된 엔드포인트 119개 힌트 JSON
+  - [x] `curl -H "Origin: ..."` 로 `Access-Control-Allow-Origin: *` 헤더 확인 (CORS 동작)
+  - [x] 콘솔 출력: 총 페이지 수, 파싱 경고(응답코드 파싱 실패/JSON 여러 개/유효하지 않은 JSON), 스킵 페이지(`URI 값이 없습니다`), 등록 엔드포인트 119개·에러 케이스 365개 표시 확인
