@@ -101,3 +101,30 @@
 - **결정**: 수동 `do...while(cursor)` 루프로 구현.
 - **검토한 대안**: `collectPaginatedAPI` 사용.
 - **근거**: v5.23.0 기준 `ListBlockChildrenParameters`/`QueryDataSourceParameters`의 `start_cursor` 필드가 `string | null | undefined`인 반면, `collectPaginatedAPI`의 제네릭 제약 `PaginatedArgs`는 `string | undefined`만 허용해 `strict` 모드에서 타입 에러가 발생했다(SDK 자체의 타입 선언 불일치). 제네릭 타입 인자를 억지로 맞추기보다 원래 계획서가 요구한 수동 루프를 그대로 구현하는 편이 더 간단하고 타입 안전했다.
+
+---
+
+## D-012: 페이지네이션 응답의 `has_more=true` + `next_cursor=null` 이상 상태는 조용히 종료하지 않고 에러로 실패
+
+- **배경**: [Phase 1 코드 리뷰](reviews/2026-07-09-phase1-code-review.md) #1(Copilot 단독 발견)에서 `blockParser.ts`/`databaseFetcher.ts`의 `cursor = response.has_more ? response.next_cursor ?? undefined : undefined` 패턴이, `has_more:true`인데 `next_cursor:null`인 비정상 응답을 만나면 `cursor`가 `undefined`가 되어 루프가 "정상 종료"로 오인된다는 지적을 받았다. SDK 타입 선언(`next_cursor: string | null`)도 이 상태를 명시적으로 허용한다.
+- **결정**: 두 루프 모두 `has_more && !next_cursor`일 때 즉시 `Error`를 던지도록 방어 가드를 추가.
+- **검토한 대안**: 기존처럼 조용히 종료, 혹은 경고만 남기고 계속 진행.
+- **근거**: 블록/페이지가 누락된 채로 목서버가 "정상 기동 완료"처럼 보이는 것이 가장 나쁜 실패 모드다. 조용한 데이터 손실보다 즉각적인 실패가 디버깅과 신뢰성 면에서 낫다.
+
+---
+
+## D-013: 유효하지 않은 JSON 응답 예시는 경고 후 원문을 서빙하지 않고 빈 객체로 대체
+
+- **배경**: [Phase 1 코드 리뷰](reviews/2026-07-09-phase1-code-review.md) #2(Claude 3개 앵글 독립 지적)에서 `responseJsonExtractor.ts`가 `JSON.parse` 실패 시에도 경고만 남기고 원문을 그대로 성공 응답으로 사용해, `Content-Type: application/json` 헤더와 함께 문법적으로 깨진 body가 서빙될 수 있다는 점을 지적받았다. 형제 모듈 `propertyExtractor.ts`는 동일 성격의 검증 실패를 `{ ok: false, reason }`으로 명확히 스킵시키는데 이 모듈만 예외적으로 관대했다. 이는 리뷰 문서의 Open Question(정책 미확정)이기도 했다.
+- **결정**: `JSON.parse` 실패 시 경고 후 빈 객체(`{}`, `hasBody: false`)로 대체하도록 변경 — `propertyExtractor.ts`와 동일한 "검증 실패 시 안전한 기본값" 정책으로 통일.
+- **검토한 대안**: 기존처럼 경고만 남기고 원문 그대로 서빙(문서 그대로 반영한다는 D-003의 취지를 문자 그대로 따르는 관점도 있었으나, 문법 오류까지 그대로 서빙하는 것은 취지를 넘어선다고 판단).
+- **근거**: 프론트엔드 개발자 입장에서 "빈 객체가 온다"보다 "200 OK + `application/json`인데 `response.json()`이 예외를 던진다"가 훨씬 디버깅하기 어려운 실패 모드다.
+
+---
+
+## D-014: 예외 상황 섹션 탐색을 `__children`까지 재귀하도록 방어적으로 확장 (실 DB엔 현재 영향 없음 확인)
+
+- **배경**: [Phase 1 코드 리뷰](reviews/2026-07-09-phase1-code-review.md) #3에서 `errorCaseParser.ts`가 `responseJsonExtractor.ts`의 `collectCodeBlocks`와 달리 최상위 블록만 스캔해, "예외 상황" 텍스트나 그 이후 테이블이 toggle/column_list 등에 중첩되면 놓칠 수 있다는 비대칭을 지적받았다. 리뷰 자체는 실제 이런 중첩 사례가 있는지 미확인 상태로 Open Question으로 남겨뒀다. 이후 실 DB(`DB_URL`) 120페이지를 전수 스크립트로 조회해 대조한 결과, **현재 이 DB에서는 "예외 상황" 텍스트와 테이블이 단 한 건의 예외도 없이 항상 최상위 형제 블록에 위치**함을 확인했다(중첩 발견 0건). 재귀/비재귀 결과가 갈린 7개 페이지도 전부 응답코드 셀에 선행 정수가 없어 정상적으로 skip된 것이었지, 중첩과는 무관했다.
+- **결정**: 실사용 영향이 0건으로 확인됐음에도, `responseJsonExtractor.ts`와 동일하게 `__children`까지 재귀하는 `flattenBlocks`로 변경.
+- **검토한 대안**: 실 데이터에 영향이 없으므로 수정하지 않고 "알려진 비대칭, 실사용 영향 없음"으로만 기록.
+- **근거**: 이 프로젝트는 Phase 0에서 스펙 문서의 프로퍼티 타입 가정 3건이 실 데이터와 달랐던 전례가 있어(`docs/IMPLEMENTATION_PLAN.md` Phase 0 검증 결과 참고), 페이지 구조 가정에 보수적으로 접근하는 편이 안전하다고 판단했다. 재귀 로직 자체가 이미 `responseJsonExtractor.ts`에 구현돼 있어 추가 비용도 거의 없었다.
