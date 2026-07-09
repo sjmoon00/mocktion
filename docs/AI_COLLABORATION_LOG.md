@@ -30,3 +30,40 @@
 - AI에게 "스펙대로 구현해"라고 맡기지 않고, "실 데이터로 가정을 먼저 검증하는 단계"를 Phase 0으로 설계에 넣은 것 — 이건 AI가 아니라 사람의 판단이었다.
 - AI가 실제로 스키마 불일치 3건을 찾아냈지만, 그걸 그대로 밀어붙이지 않고 계획 문서에 근거와 함께 기록하도록 지시한 것도 사람의 개입.
 - 토큰 등 민감정보를 AI와의 대화창에 노출하지 않는 방식(.env 직접 작성)을 사용자가 스스로 선택.
+
+---
+
+## 세션 2 — 2026-07-09: Phase 1 파싱 모듈 구현
+
+**시작 상태**: Phase 0 완료 — `notionClient.ts`, 실 DB 검증 결과, fixture 4개(`get-200-submission-detail`, `post-201-team-member`, `put-204-sort`, `delete-204-category`) 확보됨.
+
+**진행 과정**:
+
+1. "Phase 1 구현 시작해줘"라는 짧은 요청에, AI가 바로 코드를 쓰지 않고 `IMPLEMENTATION_PLAN.md`/`DECISIONS.md`/`notion-mockserver-spec.md`와 fixture 4개 전체를 먼저 읽어 계획의 세부 규칙(3단계 우선순위, 에러 테이블 파싱 규칙, `__children` 필드로 미리 펼쳐진 fixture 구조)을 파악한 뒤 설계에 들어감.
+2. 구현 전 `@notionhq/client`(v5.23.0) 타입 선언을 직접 뒤져 계획서가 몰랐던 공식 헬퍼 3가지를 발견: `extractDatabaseId`(URL→ID 추출), `isFullPage`/`isFullBlock`(partial 응답 타입 좁히기), `collectPaginatedAPI`(페이지네이션 제네릭 헬퍼). 계획서의 "자체 정규식으로 32hex 추출" 항목을 SDK 헬퍼 재사용으로 대체함([D-009](DECISIONS.md#d-009-db-url--database_id-추출은-자체-정규식-대신-sdk의-extractdatabaseid-헬퍼를-래핑)).
+3. `collectPaginatedAPI`를 실제로 적용했다가 `npm run build`(strict TS)에서 타입 에러 발견 — SDK 자체의 `start_cursor: string | null | undefined` 타입이 헬퍼의 제네릭 제약(`string | undefined`)과 불일치. 제네릭 타입 인자를 억지로 맞추는 대신 계획서 원안인 수동 `has_more` 루프로 되돌림([D-011](DECISIONS.md#d-011-notion-페이지네이션은-sdk의-collectpaginatedapi-대신-수동-has_morenext_cursor-루프)) — "타입 에러를 우회하기보다 더 단순한 대안으로 교체"한 판단.
+4. `--status` 필터는 계획서의 "select/status 타입 감지 후 서버사이드 필터 분기" 대신, 전량 조회 후 클라이언트 사이드에서 값을 비교하는 방식으로 단순화([D-010](DECISIONS.md#d-010---status-필터는-서버사이드-selectstatus-분기-대신-전량-조회-후-클라이언트-사이드-필터링)) — Phase 0에서 이미 페이지 수(120개)와 상태 타입(`status` 고정)이 확인되어 서버사이드 분기의 이득이 크지 않다고 판단. **사람이 사후 검토해야 할 지점**: 이 단순화는 AI가 자체 판단(Auto Mode)으로 진행한 것이라, 사용자가 이 트레이드오프에 동의하는지 확인이 필요하다.
+5. 6개 모듈(`richText`, `databaseFetcher`, `propertyExtractor`, `blockParser`, `responseJsonExtractor`, `errorCaseParser`) + 4개 테스트 파일을 구현. fixture의 `__children` 필드명을 그대로 내부 타입(`BlockWithChildren`)에 사용해, 실 데이터 구조와 파서 타입이 그대로 맞물리도록 설계.
+6. `npm test`(18개 테스트, GET/POST/PUT/DELETE 4개 fixture 기반) + `npm run build`(strict TS) 모두 통과 확인.
+
+**포트폴리오 관점에서의 핵심 포인트**:
+- "계획서에 없던 공식 SDK 헬퍼를 찾아 재사용"과 "그 헬퍼가 실제로는 타입이 안 맞아 되돌림" 둘 다 같은 세션에서 일어남 — AI가 라이브러리를 맹신하지 않고 컴파일러 피드백으로 재검증한 사례.
+- 계획서의 서버사이드 필터 분기 로직을 통째로 단순화한 결정(D-010)은 사람의 사전 승인 없이 Auto Mode 하에서 AI가 내린 판단이므로, 다음 세션에서 사용자 검토가 필요.
+
+---
+
+## 세션 3 — 2026-07-09/10: PR #1 코드 리뷰 대응
+
+**시작 상태**: `Feature/Phase1-NotionParser` 브랜치, PR #1 오픈. `pr-review` 스킬로 Claude `/code-review high`(8개 앵글) + GitHub Copilot 인라인 코멘트를 종합한 `docs/reviews/2026-07-09-phase1-code-review.md`가 이미 작성되어 있는 상태에서 시작.
+
+**진행 과정**:
+
+1. 리뷰 문서를 읽고 AI가 8개 findings를 심각도 순으로 정리해 "6개 커밋 단위 + 문서화" 계획을 제시. 이 시점엔 리뷰 문서의 주장을 그대로 신뢰하고 커밋 그룹으로만 재배열했을 뿐, 실제 소스와 대조 검증은 하지 않은 상태였다.
+2. **사람이 개입한 지점**: "리뷰들이 받아들일만한지 검토한거지?"라는 질문으로 AI가 검증을 생략했다는 것을 정확히 짚어냄. AI는 이를 인정하고, 8개 findings 전부를 현재 `src/notion/*.ts` 소스와 한 줄씩 대조하는 재검증을 수행 — 라인 번호·동작 설명이 실제 코드와 일치하는지, 리뷰가 스스로 하향 조정한 항목(#5)의 판단 근거(`richText.ts`의 null 가드, Notion 테이블 데이터 모델)가 타당한지 확인. 결과: 8건 모두 사실관계 일치, 오탐 없음.
+3. Finding #3(errorCaseParser 비재귀 탐색)의 리뷰 자체의 Open Question — "예외 상황/테이블 중첩이 실 DB에 실제로 있는가" — 을 검증하기 위해 `_review-verify.ts`(Phase 0 방식과 동일하게 임시 스크립트, 확인 후 삭제)로 실 DB 120페이지 전체를 순회. 결과: 중첩 사례 0건. 재귀/비재귀 결과가 갈린 7개 페이지도 전부 응답코드 셀에 선행 정수가 없어 정상 skip된 것으로, 중첩과 무관함을 확인.
+4. 이 실측 결과를 반영해 Finding #3의 우선순위를 Medium → 방어적 개선(사실상 Low)으로 재조정하고, 최종 7개 커밋 계획을 확정해 사용자 승인을 받음.
+5. 승인된 계획대로 6개 코드 커밋(페이지네이션 방어 가드, JSON 실패 폴백, 예외 상황 재귀 탐색, 상태 필터링 분리, `__children` 캐스팅 제거, 표시명 헬퍼 통합) + 문서화 커밋을 CLAUDE.md의 "구현 계획과 커밋 단위" 규칙대로 각 단위 완료·빌드·테스트 통과 즉시 그 자리에서 커밋. 최종 51개 테스트, strict 빌드 통과.
+
+**포트폴리오 관점에서의 핵심 포인트**:
+- AI가 리뷰 결과를 검증 없이 그대로 실행 계획으로 옮긴 것을, 사람이 "정말 검토한 게 맞느냐"는 한 마디로 잡아낸 사례 — AI 출력물(코드 리뷰 문서)도 무비판적으로 신뢰하면 안 된다는 것을 보여준다.
+- "코드가 비대칭적으로 짜여 있다"는 사실과 "실전에서 문제가 되는가"는 별개 질문이라는 점을 실 DB 재현으로 직접 확인한 사례(D-014) — 리뷰의 지적이 유효해도, 고칠지 말지는 실측 데이터로 판단해야 한다는 이 프로젝트의 반복되는 원칙(Phase 0의 스펙-실데이터 불일치 3건과 같은 맥락)이 코드 리뷰 대응에도 그대로 적용됨.
