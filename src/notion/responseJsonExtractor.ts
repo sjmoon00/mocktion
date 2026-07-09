@@ -27,7 +27,8 @@ export function extractResponseJson(blocks: BlockNode[], successStatusCode: numb
   try {
     JSON.parse(json);
   } catch {
-    console.warn('⚠️  유효하지 않은 JSON입니다. 원문 그대로 사용합니다.');
+    console.warn('⚠️  유효하지 않은 JSON입니다. 빈 객체로 대체합니다.');
+    return { hasBody: false, successResponseJson: '{}' };
   }
 
   return { hasBody: true, successResponseJson: json };

@@ -10,6 +10,15 @@ function blocksOf(fixture: { blocks: unknown }): BlockNode[] {
   return fixture.blocks as unknown as BlockNode[];
 }
 
+function codeBlock(text: string): BlockNode {
+  return {
+    id: 'block-1',
+    type: 'code',
+    has_children: false,
+    code: { rich_text: [{ plain_text: text }] },
+  };
+}
+
 describe('extractResponseJson', () => {
   it('GET: 응답 JSON이 있는 code 블록을 추출한다 (2순위)', () => {
     const result = extractResponseJson(blocksOf(getFixture), 200);
@@ -34,6 +43,14 @@ describe('extractResponseJson', () => {
 
   it('DELETE: 204는 요청 code 블록의 language(java) 태그와 무관하게 무시된다 (1순위)', () => {
     const result = extractResponseJson(blocksOf(deleteFixture), 204);
+
+    expect(result).toEqual({ hasBody: false, successResponseJson: '{}' });
+  });
+
+  it('유효하지 않은 JSON 응답 예시는 경고 후 빈 객체로 대체한다', () => {
+    const blocks = [codeBlock('HTTP/1.1 200 OK\n\n{ "broken": }')];
+
+    const result = extractResponseJson(blocks, 200);
 
     expect(result).toEqual({ hasBody: false, successResponseJson: '{}' });
   });
