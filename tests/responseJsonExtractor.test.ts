@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest';
-import type { BlockNode } from '../src/notion/blockParser';
+import type { BlockWithChildren } from '../src/notion/blockParser';
 import { extractResponseJson } from '../src/notion/responseJsonExtractor';
 import getFixture from './fixtures/get-200-submission-detail.json';
 import postFixture from './fixtures/post-201-team-member.json';
 import putFixture from './fixtures/put-204-sort.json';
 import deleteFixture from './fixtures/delete-204-category.json';
 
-function blocksOf(fixture: { blocks: unknown }): BlockNode[] {
-  return fixture.blocks as unknown as BlockNode[];
+function blocksOf(fixture: { blocks: unknown }): BlockWithChildren[] {
+  return fixture.blocks as unknown as BlockWithChildren[];
 }
 
-function codeBlock(text: string): BlockNode {
+function codeBlock(text: string): BlockWithChildren {
   return {
     id: 'block-1',
     type: 'code',

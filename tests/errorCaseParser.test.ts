@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import type { BlockNode } from '../src/notion/blockParser';
+import type { BlockWithChildren } from '../src/notion/blockParser';
 import { extractErrorCases } from '../src/notion/errorCaseParser';
 import getFixture from './fixtures/get-200-submission-detail.json';
 import postFixture from './fixtures/post-201-team-member.json';
 import putFixture from './fixtures/put-204-sort.json';
 import deleteFixture from './fixtures/delete-204-category.json';
 
-function blocksOf(fixture: { blocks: unknown }): BlockNode[] {
-  return fixture.blocks as unknown as BlockNode[];
+function blocksOf(fixture: { blocks: unknown }): BlockWithChildren[] {
+  return fixture.blocks as unknown as BlockWithChildren[];
 }
 
 describe('extractErrorCases', () => {
@@ -50,7 +50,7 @@ describe('extractErrorCases', () => {
   });
 
   it('"예외 상황"과 테이블이 toggle 등 중첩 블록의 __children 안에 있어도 추출한다', () => {
-    const nestedBlocks: BlockNode[] = [
+    const nestedBlocks: BlockWithChildren[] = [
       {
         id: 'toggle-1',
         type: 'toggle',

@@ -1,4 +1,4 @@
-import type { BlockNode } from './blockParser';
+import type { BlockWithChildren } from './blockParser';
 import { joinRichText } from './richText';
 
 export interface ResponseJsonResult {
@@ -6,7 +6,7 @@ export interface ResponseJsonResult {
   successResponseJson: string;
 }
 
-export function extractResponseJson(blocks: BlockNode[], successStatusCode: number): ResponseJsonResult {
+export function extractResponseJson(blocks: BlockWithChildren[], successStatusCode: number): ResponseJsonResult {
   if (successStatusCode === 204) {
     return { hasBody: false, successResponseJson: '{}' };
   }
@@ -34,21 +34,20 @@ export function extractResponseJson(blocks: BlockNode[], successStatusCode: numb
   return { hasBody: true, successResponseJson: json };
 }
 
-function collectCodeBlocks(blocks: BlockNode[]): BlockNode[] {
-  const result: BlockNode[] = [];
+function collectCodeBlocks(blocks: BlockWithChildren[]): BlockWithChildren[] {
+  const result: BlockWithChildren[] = [];
   for (const block of blocks) {
     if (block.type === 'code') {
       result.push(block);
     }
-    const children = block.__children as BlockNode[] | undefined;
-    if (children) {
-      result.push(...collectCodeBlocks(children));
+    if (block.__children) {
+      result.push(...collectCodeBlocks(block.__children));
     }
   }
   return result;
 }
 
-function getCodeText(block: BlockNode): string {
+function getCodeText(block: BlockWithChildren): string {
   const code = block.code as { rich_text?: { plain_text: string }[] } | undefined;
   return joinRichText(code?.rich_text);
 }

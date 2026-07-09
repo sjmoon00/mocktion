@@ -1,8 +1,8 @@
 import type { ErrorCase } from '../types/domain';
-import type { BlockNode } from './blockParser';
+import type { BlockWithChildren } from './blockParser';
 import { joinRichText } from './richText';
 
-export function extractErrorCases(blocks: BlockNode[]): ErrorCase[] {
+export function extractErrorCases(blocks: BlockWithChildren[]): ErrorCase[] {
   const flatBlocks = flattenBlocks(blocks);
   const startIndex = flatBlocks.findIndex((block) => getBlockText(block).includes('예외 상황'));
   if (startIndex === -1) return [];
@@ -17,28 +17,25 @@ export function extractErrorCases(blocks: BlockNode[]): ErrorCase[] {
   return [];
 }
 
-function flattenBlocks(blocks: BlockNode[]): BlockNode[] {
-  const result: BlockNode[] = [];
+function flattenBlocks(blocks: BlockWithChildren[]): BlockWithChildren[] {
+  const result: BlockWithChildren[] = [];
   for (const block of blocks) {
     result.push(block);
-    const children = block.__children as BlockNode[] | undefined;
-    if (children) {
-      result.push(...flattenBlocks(children));
+    if (block.__children) {
+      result.push(...flattenBlocks(block.__children));
     }
   }
   return result;
 }
 
-function getBlockText(block: BlockNode): string {
+function getBlockText(block: BlockWithChildren): string {
   const content = block[block.type] as { rich_text?: { plain_text: string }[] } | undefined;
   if (!content?.rich_text) return '';
   return joinRichText(content.rich_text);
 }
 
-function parseErrorTable(tableBlock: BlockNode): ErrorCase[] {
-  const rows = ((tableBlock.__children as BlockNode[] | undefined) ?? []).filter(
-    (block) => block.type === 'table_row'
-  );
+function parseErrorTable(tableBlock: BlockWithChildren): ErrorCase[] {
+  const rows = (tableBlock.__children ?? []).filter((block) => block.type === 'table_row');
   const dataRows = rows.slice(1);
 
   const errorCases: ErrorCase[] = [];
