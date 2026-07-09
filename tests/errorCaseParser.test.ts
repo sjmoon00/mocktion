@@ -48,4 +48,51 @@ describe('extractErrorCases', () => {
     expect(cases).toHaveLength(4);
     expect(cases.map((c) => c.statusCode)).toEqual([404, 409, 401, 403]);
   });
+
+  it('"예외 상황"과 테이블이 toggle 등 중첩 블록의 __children 안에 있어도 추출한다', () => {
+    const nestedBlocks: BlockNode[] = [
+      {
+        id: 'toggle-1',
+        type: 'toggle',
+        has_children: true,
+        toggle: { rich_text: [{ plain_text: '접기' }] },
+        __children: [
+          {
+            id: 'bullet-1',
+            type: 'bulleted_list_item',
+            has_children: false,
+            bulleted_list_item: { rich_text: [{ plain_text: '예외 상황' }] },
+          },
+          {
+            id: 'table-1',
+            type: 'table',
+            has_children: true,
+            table: { table_width: 3, has_column_header: false },
+            __children: [
+              {
+                id: 'row-header',
+                type: 'table_row',
+                has_children: false,
+                table_row: {
+                  cells: [[{ plain_text: '상황' }], [{ plain_text: '응답코드' }], [{ plain_text: '메시지' }]],
+                },
+              },
+              {
+                id: 'row-1',
+                type: 'table_row',
+                has_children: false,
+                table_row: {
+                  cells: [[{ plain_text: '중첩된 상황' }], [{ plain_text: '400' }], [{ plain_text: 'Nested error' }]],
+                },
+              },
+            ],
+          },
+        ],
+      },
+    ];
+
+    const cases = extractErrorCases(nestedBlocks);
+
+    expect(cases).toEqual([{ statusCode: 400, situation: '중첩된 상황', message: 'Nested error' }]);
+  });
 });
