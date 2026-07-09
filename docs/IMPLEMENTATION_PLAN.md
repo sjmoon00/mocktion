@@ -1,6 +1,6 @@
 # Notion Mock Server CLI — 구현 계획 및 진행 추적
 
-> 이 문서는 [notion-mockserver-spec.md](notion-mockserver-spec.md)를 기반으로 한 세부 구현 계획이다.
+> 이 문서는 [notion-mockserver-spec.md](../notion-mockserver-spec.md)를 기반으로 한 세부 구현 계획이다.
 > 각 항목의 체크박스로 구현 진행 상황을 추적한다. 구현이 완료된 항목은 `[x]`로 표시할 것.
 
 ## Context

@@ -72,15 +72,23 @@ Notion API 명세 DB URL로 로컬 목서버를 즉시 실행하는 CLI 도구(T
 
 ### 참고 문서 (읽는 순서)
 1. `notion-mockserver-spec.md` — 전체 기획서, 최초 설계 근거
-2. `IMPLEMENTATION_PLAN.md` — Phase별 구현 계획과 진행 체크리스트 (실행의 단일 진실 공급원)
-3. `DECISIONS.md` — 기술적 의사결정 로그 (왜 이걸 선택했는가)
-4. `TRADEOFFS.md` — 스코프 트레이드오프 (왜 이건 하지 않았는가)
-5. `AI_COLLABORATION_LOG.md` — 세션별 AI 협업 과정 시간순 기록
+2. `docs/IMPLEMENTATION_PLAN.md` — Phase별 구현 계획과 진행 체크리스트 (실행의 단일 진실 공급원)
+3. `docs/DECISIONS.md` — 기술적 의사결정 로그 (왜 이걸 선택했는가)
+4. `docs/TRADEOFFS.md` — 스코프 트레이드오프 (왜 이건 하지 않았는가)
+5. `docs/AI_COLLABORATION_LOG.md` — 세션별 AI 협업 과정 시간순 기록
 
 ### 작업 시 반드시 지킬 것
 
-- **문서 갱신은 작업의 일부다, 선택이 아니다.** 새 기술적 결정을 내리면 `DECISIONS.md`에 번호를 이어(D-00X) 추가하고, 스코프를 의도적으로 제외하면 `TRADEOFFS.md`에 추가한다(T-00X). 세션 중 의미 있는 진행이 있었다면 끝나기 전에 `AI_COLLABORATION_LOG.md`에 이번 세션 항목을 남긴다 — 무엇을 물었고, AI가 무엇을 했거나 놓쳤고, 사람이 어디서 판단을 개입시켰는지.
-- `IMPLEMENTATION_PLAN.md`의 체크박스는 실제 구현 상태와 항상 일치시킨다 — 완료된 항목은 즉시 `[x]`로.
-- **모듈 시스템은 CommonJS + `moduleResolution: NodeNext`로 고정** (`@notionhq/client`가 CJS 기반이라 ESM 전환으로 얻는 이득이 없음 — 근거: `DECISIONS.md` D-005). 임의로 `package.json`에 `"type": "module"`을 추가하지 않는다.
+- **문서 갱신은 작업의 일부다, 선택이 아니다.** 새 기술적 결정을 내리면 `docs/DECISIONS.md`에 번호를 이어(D-00X) 추가하고, 스코프를 의도적으로 제외하면 `docs/TRADEOFFS.md`에 추가한다(T-00X). 세션 중 의미 있는 진행이 있었다면 끝나기 전에 `docs/AI_COLLABORATION_LOG.md`에 이번 세션 항목을 남긴다 — 무엇을 물었고, AI가 무엇을 했거나 놓쳤고, 사람이 어디서 판단을 개입시켰는지.
+- `docs/IMPLEMENTATION_PLAN.md`의 체크박스는 실제 구현 상태와 항상 일치시킨다 — 완료된 항목은 즉시 `[x]`로.
+- **모듈 시스템은 CommonJS + `moduleResolution: NodeNext`로 고정** (`@notionhq/client`가 CJS 기반이라 ESM 전환으로 얻는 이득이 없음 — 근거: `docs/DECISIONS.md` D-005). 임의로 `package.json`에 `"type": "module"`을 추가하지 않는다.
 - 파서 모듈(`src/notion/*`)은 Notion API 호출부와 순수 파싱 로직을 분리한다 — 파싱 함수는 블록/프로퍼티 JSON을 인자로 받아 `tests/fixtures/*.json` 기반 테스트가 가능해야 한다.
 - 이 프로젝트는 **실 Notion DB로 검증 가능한 상태**다(`.env`에 `NOTION_TOKEN`, `DB_URL` 설정됨). 파서 관련 가정은 스펙 문서만 보고 판단하지 말고, 가능하면 실 데이터(fixture 또는 실 DB 재조회)로 확인한다 — Phase 0에서 스펙 문서의 프로퍼티 타입 가정 3건(Method/응답코드가 select 아닌 multi_select, URI가 title 아닌 rich_text, "예외 상황"이 paragraph 아닌 bulleted_list_item)이 실 데이터와 달랐던 전례가 있다.
+
+### 커밋 메시지 컨벤션
+
+Angular 컨벤션을 따르되 간소화한다.
+- 형식: `<type>(<scope>): <subject>` — subject는 한국어, 명령형, 한 줄로 간결하게.
+- type: `feat` `fix` `docs` `refactor` `test` `chore` `build` 중 하나.
+- scope는 선택 사항 — 애매하면 생략(`<type>: <subject>`).
+- body/footer는 배경 설명이 꼭 필요할 때만 짧게 붙인다. `BREAKING CHANGE` 각주, 커밋별 exhaustive diff 나열 등 무거운 규칙은 따르지 않는다.
