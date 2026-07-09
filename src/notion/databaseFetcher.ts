@@ -1,6 +1,6 @@
 import type { Client, PageObjectResponse } from '@notionhq/client';
 import { extractDatabaseId, isFullDatabase, isFullPage } from '@notionhq/client';
-import { joinRichText } from './richText';
+import { extractTitleText } from './richText';
 
 export interface SkippedPage {
   displayName: string;
@@ -78,7 +78,7 @@ export function filterPagesByStatus(pages: PageObjectResponse[], statusFilter?: 
     if (statusValue === statusFilter) {
       matched.push(page);
     } else {
-      skipped.push({ displayName: readTitleDisplayName(page.properties), statusValue: statusValue ?? '(없음)' });
+      skipped.push({ displayName: extractTitleText(page.properties), statusValue: statusValue ?? '(없음)' });
     }
   }
 
@@ -97,13 +97,4 @@ function readStatusValue(prop: unknown): string | undefined {
   if (p.type === 'status') return p.status?.name;
   if (p.type === 'select') return p.select?.name;
   return undefined;
-}
-
-function readTitleDisplayName(properties: PageObjectResponse['properties']): string {
-  for (const value of Object.values(properties)) {
-    if ((value as { type?: string }).type === 'title') {
-      return joinRichText((value as { title: { plain_text: string }[] }).title) || '(제목 없음)';
-    }
-  }
-  return '(제목 없음)';
 }

@@ -1,4 +1,4 @@
-import { joinRichText } from './richText';
+import { extractTitleText, joinRichText } from './richText';
 
 export interface ExtractedProperties {
   method: string;
@@ -12,7 +12,7 @@ export type PropertyExtractionResult =
   | { ok: false; displayName: string; reason: string };
 
 export function extractProperties(properties: Record<string, unknown>): PropertyExtractionResult {
-  const displayName = extractDisplayName(properties);
+  const displayName = extractTitleText(properties);
 
   const method = extractMultiSelectFirst(properties['HTTP Method']);
   if (!method) {
@@ -52,14 +52,4 @@ function extractRichText(prop: unknown): string {
   const p = prop as { type?: string; rich_text?: { plain_text: string }[] } | undefined;
   if (!p || p.type !== 'rich_text') return '';
   return joinRichText(p.rich_text);
-}
-
-function extractDisplayName(properties: Record<string, unknown>): string {
-  for (const value of Object.values(properties)) {
-    const p = value as { type?: string; title?: { plain_text: string }[] };
-    if (p?.type === 'title') {
-      return joinRichText(p.title) || '(제목 없음)';
-    }
-  }
-  return '(제목 없음)';
 }
