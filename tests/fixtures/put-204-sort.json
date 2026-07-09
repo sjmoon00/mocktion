@@ -1,0 +1,1530 @@
+{
+  "pageProperties": {
+    "method": "PUT",
+    "uri": "/contests/{contestId}/sort",
+    "code": "204",
+    "title": "대회 정렬 설정 변경"
+  },
+  "blocks": [
+    {
+      "object": "block",
+      "id": "03e01997-8f99-8339-a806-81c233cd52af",
+      "parent": {
+        "type": "page_id",
+        "page_id": "3c601997-8f99-82fd-af39-815edcc0447e"
+      },
+      "created_time": "2026-07-09T11:55:00.000Z",
+      "last_edited_time": "2026-07-09T11:55:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "heading_1",
+      "heading_1": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "1. API 설명",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "1. API 설명",
+            "href": null
+          }
+        ],
+        "is_toggleable": false,
+        "color": "default"
+      },
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "ec201997-8f99-831f-bac2-010b95f7e5b3",
+      "parent": {
+        "type": "page_id",
+        "page_id": "3c601997-8f99-82fd-af39-815edcc0447e"
+      },
+      "created_time": "2026-07-09T11:55:00.000Z",
+      "last_edited_time": "2026-07-09T11:55:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "quote",
+      "quote": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "팀 정렬 설정을 변경합니다.",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "팀 정렬 설정을 변경합니다.",
+            "href": null
+          }
+        ],
+        "color": "default"
+      },
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "c4a01997-8f99-8343-8aa6-81632b750617",
+      "parent": {
+        "type": "page_id",
+        "page_id": "3c601997-8f99-82fd-af39-815edcc0447e"
+      },
+      "created_time": "2026-07-09T11:55:00.000Z",
+      "last_edited_time": "2026-07-09T11:55:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "bulleted_list_item",
+      "bulleted_list_item": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "“ASC” → 오름차순 정렬",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "“ASC” → 오름차순 정렬",
+            "href": null
+          }
+        ],
+        "color": "default"
+      },
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "b2101997-8f99-8240-a0da-01e2e8786114",
+      "parent": {
+        "type": "page_id",
+        "page_id": "3c601997-8f99-82fd-af39-815edcc0447e"
+      },
+      "created_time": "2026-07-09T11:55:00.000Z",
+      "last_edited_time": "2026-07-09T11:55:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "bulleted_list_item",
+      "bulleted_list_item": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "“RANDOM” → 랜덤 정렬 (DEFAULT)",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "“RANDOM” → 랜덤 정렬 (DEFAULT)",
+            "href": null
+          }
+        ],
+        "color": "default"
+      },
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "54f01997-8f99-83a5-9bd1-819e7890d962",
+      "parent": {
+        "type": "page_id",
+        "page_id": "3c601997-8f99-82fd-af39-815edcc0447e"
+      },
+      "created_time": "2026-07-09T11:55:00.000Z",
+      "last_edited_time": "2026-07-09T11:55:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "bulleted_list_item",
+      "bulleted_list_item": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "“CUSTOM” → 수동 정렬",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "“CUSTOM” → 수동 정렬",
+            "href": null
+          }
+        ],
+        "color": "default"
+      },
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "16a01997-8f99-83a1-b76a-816427830c60",
+      "parent": {
+        "type": "page_id",
+        "page_id": "3c601997-8f99-82fd-af39-815edcc0447e"
+      },
+      "created_time": "2026-07-09T11:55:00.000Z",
+      "last_edited_time": "2026-07-09T11:55:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "paragraph",
+      "paragraph": {
+        "rich_text": [],
+        "icon": null,
+        "color": "default"
+      },
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "53601997-8f99-83ce-be6c-011813bb60aa",
+      "parent": {
+        "type": "page_id",
+        "page_id": "3c601997-8f99-82fd-af39-815edcc0447e"
+      },
+      "created_time": "2026-07-09T11:55:00.000Z",
+      "last_edited_time": "2026-07-09T11:55:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "divider",
+      "divider": {},
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "b8701997-8f99-838b-bb81-81e710a94858",
+      "parent": {
+        "type": "page_id",
+        "page_id": "3c601997-8f99-82fd-af39-815edcc0447e"
+      },
+      "created_time": "2026-07-09T11:55:00.000Z",
+      "last_edited_time": "2026-07-09T11:55:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "heading_1",
+      "heading_1": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "2. Reqeust",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "2. Reqeust",
+            "href": null
+          }
+        ],
+        "is_toggleable": false,
+        "color": "default"
+      },
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "3d101997-8f99-8278-a436-811180f253dd",
+      "parent": {
+        "type": "page_id",
+        "page_id": "3c601997-8f99-82fd-af39-815edcc0447e"
+      },
+      "created_time": "2026-07-09T11:55:00.000Z",
+      "last_edited_time": "2026-07-09T11:55:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "heading_3",
+      "heading_3": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "📌 Request Header",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "📌 Request Header",
+            "href": null
+          }
+        ],
+        "is_toggleable": false,
+        "color": "default"
+      },
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "b5d01997-8f99-8382-9f8e-01dd3db16516",
+      "parent": {
+        "type": "page_id",
+        "page_id": "3c601997-8f99-82fd-af39-815edcc0447e"
+      },
+      "created_time": "2026-07-09T11:55:00.000Z",
+      "last_edited_time": "2026-07-09T11:55:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": true,
+      "in_trash": false,
+      "type": "table",
+      "table": {
+        "table_width": 3,
+        "has_column_header": false,
+        "has_row_header": false
+      },
+      "archived": false,
+      "__children": [
+        {
+          "object": "block",
+          "id": "f7701997-8f99-82ac-a053-8185450c9df4",
+          "parent": {
+            "type": "block_id",
+            "block_id": "b5d01997-8f99-8382-9f8e-01dd3db16516"
+          },
+          "created_time": "2026-07-09T11:55:00.000Z",
+          "last_edited_time": "2026-07-09T11:55:00.000Z",
+          "created_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "last_edited_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "has_children": false,
+          "in_trash": false,
+          "type": "table_row",
+          "table_row": {
+            "cells": [
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "이름",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "이름",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "설명",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "설명",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "필수",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "필수",
+                  "href": null
+                }
+              ]
+            ]
+          },
+          "archived": false
+        },
+        {
+          "object": "block",
+          "id": "9ba01997-8f99-8369-910c-0187f78db87d",
+          "parent": {
+            "type": "block_id",
+            "block_id": "b5d01997-8f99-8382-9f8e-01dd3db16516"
+          },
+          "created_time": "2026-07-09T11:55:00.000Z",
+          "last_edited_time": "2026-07-09T11:55:00.000Z",
+          "created_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "last_edited_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "has_children": false,
+          "in_trash": false,
+          "type": "table_row",
+          "table_row": {
+            "cells": [
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "Authorization",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "Authorization",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "액세스 토큰 기반 인증 (Bearer {ACCESS_TOKEN})",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "액세스 토큰 기반 인증 (Bearer {ACCESS_TOKEN})",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "O",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "O",
+                  "href": null
+                }
+              ]
+            ]
+          },
+          "archived": false
+        }
+      ]
+    },
+    {
+      "object": "block",
+      "id": "fed01997-8f99-82b1-af30-01e7ef065b11",
+      "parent": {
+        "type": "page_id",
+        "page_id": "3c601997-8f99-82fd-af39-815edcc0447e"
+      },
+      "created_time": "2026-07-09T11:55:00.000Z",
+      "last_edited_time": "2026-07-09T11:55:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "heading_3",
+      "heading_3": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "📌 Path Parameter",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "📌 Path Parameter",
+            "href": null
+          }
+        ],
+        "is_toggleable": false,
+        "color": "default"
+      },
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "27001997-8f99-8225-879b-816475f5d82a",
+      "parent": {
+        "type": "page_id",
+        "page_id": "3c601997-8f99-82fd-af39-815edcc0447e"
+      },
+      "created_time": "2026-07-09T11:55:00.000Z",
+      "last_edited_time": "2026-07-09T11:55:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": true,
+      "in_trash": false,
+      "type": "table",
+      "table": {
+        "table_width": 5,
+        "has_column_header": false,
+        "has_row_header": false
+      },
+      "archived": false,
+      "__children": [
+        {
+          "object": "block",
+          "id": "52b01997-8f99-825d-945a-01d5c318c594",
+          "parent": {
+            "type": "block_id",
+            "block_id": "27001997-8f99-8225-879b-816475f5d82a"
+          },
+          "created_time": "2026-07-09T11:55:00.000Z",
+          "last_edited_time": "2026-07-09T11:55:00.000Z",
+          "created_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "last_edited_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "has_children": false,
+          "in_trash": false,
+          "type": "table_row",
+          "table_row": {
+            "cells": [
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "이름",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "이름",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "설명",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "설명",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "Type",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "Type",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "필수값",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "필수값",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "기타",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "기타",
+                  "href": null
+                }
+              ]
+            ]
+          },
+          "archived": false
+        },
+        {
+          "object": "block",
+          "id": "36c01997-8f99-83b6-b5a1-01839c7a5cb7",
+          "parent": {
+            "type": "block_id",
+            "block_id": "27001997-8f99-8225-879b-816475f5d82a"
+          },
+          "created_time": "2026-07-09T11:55:00.000Z",
+          "last_edited_time": "2026-07-09T11:55:00.000Z",
+          "created_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "last_edited_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "has_children": false,
+          "in_trash": false,
+          "type": "table_row",
+          "table_row": {
+            "cells": [
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "contestId",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "contestId",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "대회 ID",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "대회 ID",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "Long",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "Long",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "o",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "o",
+                  "href": null
+                }
+              ],
+              []
+            ]
+          },
+          "archived": false
+        }
+      ]
+    },
+    {
+      "object": "block",
+      "id": "3d001997-8f99-8259-89da-8125a8130b5d",
+      "parent": {
+        "type": "page_id",
+        "page_id": "3c601997-8f99-82fd-af39-815edcc0447e"
+      },
+      "created_time": "2026-07-09T11:55:00.000Z",
+      "last_edited_time": "2026-07-09T11:55:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "heading_3",
+      "heading_3": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "\n📌 Request Body",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "\n📌 Request Body",
+            "href": null
+          }
+        ],
+        "is_toggleable": false,
+        "color": "default"
+      },
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "68e01997-8f99-8224-b84c-018720753bba",
+      "parent": {
+        "type": "page_id",
+        "page_id": "3c601997-8f99-82fd-af39-815edcc0447e"
+      },
+      "created_time": "2026-07-09T11:55:00.000Z",
+      "last_edited_time": "2026-07-09T11:55:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": true,
+      "in_trash": false,
+      "type": "table",
+      "table": {
+        "table_width": 4,
+        "has_column_header": false,
+        "has_row_header": false
+      },
+      "archived": false,
+      "__children": [
+        {
+          "object": "block",
+          "id": "8af01997-8f99-82fa-a6de-814afc83036a",
+          "parent": {
+            "type": "block_id",
+            "block_id": "68e01997-8f99-8224-b84c-018720753bba"
+          },
+          "created_time": "2026-07-09T11:55:00.000Z",
+          "last_edited_time": "2026-07-09T11:55:00.000Z",
+          "created_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "last_edited_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "has_children": false,
+          "in_trash": false,
+          "type": "table_row",
+          "table_row": {
+            "cells": [
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "이름",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "이름",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "설명",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "설명",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "Type",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "Type",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "기타",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "기타",
+                  "href": null
+                }
+              ]
+            ]
+          },
+          "archived": false
+        },
+        {
+          "object": "block",
+          "id": "d1c01997-8f99-826e-be19-0166fd9cd713",
+          "parent": {
+            "type": "block_id",
+            "block_id": "68e01997-8f99-8224-b84c-018720753bba"
+          },
+          "created_time": "2026-07-09T11:55:00.000Z",
+          "last_edited_time": "2026-07-09T11:55:00.000Z",
+          "created_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "last_edited_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "has_children": false,
+          "in_trash": false,
+          "type": "table_row",
+          "table_row": {
+            "cells": [
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "mode",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "mode",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "모드 설정",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "모드 설정",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "String",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "String",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "ASC → 오름차순, RANDOM → 내림차순, CUSTOM → 수동 정렬",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "ASC → 오름차순, RANDOM → 내림차순, CUSTOM → 수동 정렬",
+                  "href": null
+                }
+              ]
+            ]
+          },
+          "archived": false
+        }
+      ]
+    },
+    {
+      "object": "block",
+      "id": "47701997-8f99-832f-8a0f-815d7356c045",
+      "parent": {
+        "type": "page_id",
+        "page_id": "3c601997-8f99-82fd-af39-815edcc0447e"
+      },
+      "created_time": "2026-07-09T11:55:00.000Z",
+      "last_edited_time": "2026-07-09T11:55:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "code",
+      "code": {
+        "caption": [],
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "PUT /contests/1/sort\nAuthorization: Bearer {ACCESS_TOKEN}\nContent-Type: application/json\n\n{\n  \"mode\" : \"ASC\"\n}",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "PUT /contests/1/sort\nAuthorization: Bearer {ACCESS_TOKEN}\nContent-Type: application/json\n\n{\n  \"mode\" : \"ASC\"\n}",
+            "href": null
+          }
+        ],
+        "language": "json"
+      },
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "e3001997-8f99-82af-99bb-819a71044cbe",
+      "parent": {
+        "type": "page_id",
+        "page_id": "3c601997-8f99-82fd-af39-815edcc0447e"
+      },
+      "created_time": "2026-07-09T11:55:00.000Z",
+      "last_edited_time": "2026-07-09T11:55:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "paragraph",
+      "paragraph": {
+        "rich_text": [],
+        "icon": null,
+        "color": "default"
+      },
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "6e001997-8f99-8216-951a-01020076549c",
+      "parent": {
+        "type": "page_id",
+        "page_id": "3c601997-8f99-82fd-af39-815edcc0447e"
+      },
+      "created_time": "2026-07-09T11:55:00.000Z",
+      "last_edited_time": "2026-07-09T11:55:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "divider",
+      "divider": {},
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "92901997-8f99-8255-b837-0187ea9cdce5",
+      "parent": {
+        "type": "page_id",
+        "page_id": "3c601997-8f99-82fd-af39-815edcc0447e"
+      },
+      "created_time": "2026-07-09T11:55:00.000Z",
+      "last_edited_time": "2026-07-09T11:55:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "bulleted_list_item",
+      "bulleted_list_item": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "예외 상황",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "예외 상황",
+            "href": null
+          }
+        ],
+        "color": "default"
+      },
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "a5e01997-8f99-8273-8303-01edcc4a14c5",
+      "parent": {
+        "type": "page_id",
+        "page_id": "3c601997-8f99-82fd-af39-815edcc0447e"
+      },
+      "created_time": "2026-07-09T11:55:00.000Z",
+      "last_edited_time": "2026-07-09T11:55:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": true,
+      "in_trash": false,
+      "type": "table",
+      "table": {
+        "table_width": 3,
+        "has_column_header": false,
+        "has_row_header": false
+      },
+      "archived": false,
+      "__children": [
+        {
+          "object": "block",
+          "id": "cb901997-8f99-831e-bcd2-811bb4d2e578",
+          "parent": {
+            "type": "block_id",
+            "block_id": "a5e01997-8f99-8273-8303-01edcc4a14c5"
+          },
+          "created_time": "2026-07-09T11:55:00.000Z",
+          "last_edited_time": "2026-07-09T11:55:00.000Z",
+          "created_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "last_edited_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "has_children": false,
+          "in_trash": false,
+          "type": "table_row",
+          "table_row": {
+            "cells": [
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "상황",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "상황",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "응답코드",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "응답코드",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "메시지",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "메시지",
+                  "href": null
+                }
+              ]
+            ]
+          },
+          "archived": false
+        },
+        {
+          "object": "block",
+          "id": "26201997-8f99-83f7-a334-815b18a5bb1e",
+          "parent": {
+            "type": "block_id",
+            "block_id": "a5e01997-8f99-8273-8303-01edcc4a14c5"
+          },
+          "created_time": "2026-07-09T11:55:00.000Z",
+          "last_edited_time": "2026-07-09T11:55:00.000Z",
+          "created_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "last_edited_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "has_children": false,
+          "in_trash": false,
+          "type": "table_row",
+          "table_row": {
+            "cells": [
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "인증되지 않은 사용자",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "인증되지 않은 사용자",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "401",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "401",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "권한이 없습니다.",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "권한이 없습니다.",
+                  "href": null
+                }
+              ]
+            ]
+          },
+          "archived": false
+        }
+      ]
+    },
+    {
+      "object": "block",
+      "id": "24e01997-8f99-82a5-9a57-01c0ed219a27",
+      "parent": {
+        "type": "page_id",
+        "page_id": "3c601997-8f99-82fd-af39-815edcc0447e"
+      },
+      "created_time": "2026-07-09T11:55:00.000Z",
+      "last_edited_time": "2026-07-09T11:55:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "paragraph",
+      "paragraph": {
+        "rich_text": [],
+        "icon": null,
+        "color": "default"
+      },
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "56301997-8f99-82f0-892f-81df40d21b3b",
+      "parent": {
+        "type": "page_id",
+        "page_id": "3c601997-8f99-82fd-af39-815edcc0447e"
+      },
+      "created_time": "2026-07-09T11:55:00.000Z",
+      "last_edited_time": "2026-07-09T11:55:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "paragraph",
+      "paragraph": {
+        "rich_text": [],
+        "icon": null,
+        "color": "default"
+      },
+      "archived": false
+    }
+  ]
+}

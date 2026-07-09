@@ -1,0 +1,2367 @@
+{
+  "pageProperties": {
+    "method": "POST",
+    "uri": "/teams/{teamId}/members",
+    "code": "201",
+    "title": "팀원 등록"
+  },
+  "blocks": [
+    {
+      "object": "block",
+      "id": "a6c01997-8f99-8215-bfae-01045037fff3",
+      "parent": {
+        "type": "page_id",
+        "page_id": "d0601997-8f99-83a0-a0ba-81dfead7c387"
+      },
+      "created_time": "2026-07-09T11:54:00.000Z",
+      "last_edited_time": "2026-07-09T11:54:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "paragraph",
+      "paragraph": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "1차변경",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "1차변경",
+            "href": null
+          }
+        ],
+        "icon": null,
+        "color": "default"
+      },
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "dba01997-8f99-83b7-909f-015945993602",
+      "parent": {
+        "type": "page_id",
+        "page_id": "d0601997-8f99-83a0-a0ba-81dfead7c387"
+      },
+      "created_time": "2026-07-09T11:54:00.000Z",
+      "last_edited_time": "2026-07-09T11:54:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "heading_1",
+      "heading_1": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "1. API 설명",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "1. API 설명",
+            "href": null
+          }
+        ],
+        "is_toggleable": false,
+        "color": "default"
+      },
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "5aa01997-8f99-827c-af9a-81195975dee0",
+      "parent": {
+        "type": "page_id",
+        "page_id": "d0601997-8f99-83a0-a0ba-81dfead7c387"
+      },
+      "created_time": "2026-07-09T11:54:00.000Z",
+      "last_edited_time": "2026-07-09T11:54:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "quote",
+      "quote": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "해당 팀에 새로운 팀원을 멤버명과 멤버학번을 통해 등록합니다.",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "해당 팀에 새로운 팀원을 멤버명과 멤버학번을 통해 등록합니다.",
+            "href": null
+          }
+        ],
+        "color": "default"
+      },
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "af801997-8f99-82c2-8475-814f6c38ae8f",
+      "parent": {
+        "type": "page_id",
+        "page_id": "d0601997-8f99-83a0-a0ba-81dfead7c387"
+      },
+      "created_time": "2026-07-09T11:54:00.000Z",
+      "last_edited_time": "2026-07-09T11:54:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "divider",
+      "divider": {},
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "f4401997-8f99-8355-a62d-010ac6296785",
+      "parent": {
+        "type": "page_id",
+        "page_id": "d0601997-8f99-83a0-a0ba-81dfead7c387"
+      },
+      "created_time": "2026-07-09T11:54:00.000Z",
+      "last_edited_time": "2026-07-09T11:54:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "heading_1",
+      "heading_1": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "2. Request",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "2. Request",
+            "href": null
+          }
+        ],
+        "is_toggleable": false,
+        "color": "default"
+      },
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "13901997-8f99-833b-99ce-016ef60ec76e",
+      "parent": {
+        "type": "page_id",
+        "page_id": "d0601997-8f99-83a0-a0ba-81dfead7c387"
+      },
+      "created_time": "2026-07-09T11:54:00.000Z",
+      "last_edited_time": "2026-07-09T11:54:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "heading_3",
+      "heading_3": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "📌 Request Header",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "📌 Request Header",
+            "href": null
+          }
+        ],
+        "is_toggleable": false,
+        "color": "default"
+      },
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "aad01997-8f99-832d-b4c7-81be7f828bec",
+      "parent": {
+        "type": "page_id",
+        "page_id": "d0601997-8f99-83a0-a0ba-81dfead7c387"
+      },
+      "created_time": "2026-07-09T11:54:00.000Z",
+      "last_edited_time": "2026-07-09T11:54:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": true,
+      "in_trash": false,
+      "type": "table",
+      "table": {
+        "table_width": 3,
+        "has_column_header": false,
+        "has_row_header": false
+      },
+      "archived": false,
+      "__children": [
+        {
+          "object": "block",
+          "id": "96201997-8f99-8204-8adc-81b6ff603b99",
+          "parent": {
+            "type": "block_id",
+            "block_id": "aad01997-8f99-832d-b4c7-81be7f828bec"
+          },
+          "created_time": "2026-07-09T11:54:00.000Z",
+          "last_edited_time": "2026-07-09T11:54:00.000Z",
+          "created_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "last_edited_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "has_children": false,
+          "in_trash": false,
+          "type": "table_row",
+          "table_row": {
+            "cells": [
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "이름",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "이름",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "설명",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "설명",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "필수",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "필수",
+                  "href": null
+                }
+              ]
+            ]
+          },
+          "archived": false
+        },
+        {
+          "object": "block",
+          "id": "d3301997-8f99-83cb-9c90-01ba40f32347",
+          "parent": {
+            "type": "block_id",
+            "block_id": "aad01997-8f99-832d-b4c7-81be7f828bec"
+          },
+          "created_time": "2026-07-09T11:54:00.000Z",
+          "last_edited_time": "2026-07-09T11:54:00.000Z",
+          "created_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "last_edited_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "has_children": false,
+          "in_trash": false,
+          "type": "table_row",
+          "table_row": {
+            "cells": [
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "Authorization",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "Authorization",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "액세스 토큰 기반 인증 (Bearer {ACCESS_TOKEN})",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "액세스 토큰 기반 인증 (Bearer {ACCESS_TOKEN})",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "O",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "O",
+                  "href": null
+                }
+              ]
+            ]
+          },
+          "archived": false
+        }
+      ]
+    },
+    {
+      "object": "block",
+      "id": "13301997-8f99-8350-bf21-81e0cf2762b2",
+      "parent": {
+        "type": "page_id",
+        "page_id": "d0601997-8f99-83a0-a0ba-81dfead7c387"
+      },
+      "created_time": "2026-07-09T11:54:00.000Z",
+      "last_edited_time": "2026-07-09T11:54:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "heading_3",
+      "heading_3": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "📌 Path Parameter",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "📌 Path Parameter",
+            "href": null
+          }
+        ],
+        "is_toggleable": false,
+        "color": "default"
+      },
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "7f401997-8f99-82c9-a0cb-01defd877b08",
+      "parent": {
+        "type": "page_id",
+        "page_id": "d0601997-8f99-83a0-a0ba-81dfead7c387"
+      },
+      "created_time": "2026-07-09T11:54:00.000Z",
+      "last_edited_time": "2026-07-09T11:54:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": true,
+      "in_trash": false,
+      "type": "table",
+      "table": {
+        "table_width": 4,
+        "has_column_header": false,
+        "has_row_header": false
+      },
+      "archived": false,
+      "__children": [
+        {
+          "object": "block",
+          "id": "22c01997-8f99-8260-9c50-0117d1688c1f",
+          "parent": {
+            "type": "block_id",
+            "block_id": "7f401997-8f99-82c9-a0cb-01defd877b08"
+          },
+          "created_time": "2026-07-09T11:54:00.000Z",
+          "last_edited_time": "2026-07-09T11:54:00.000Z",
+          "created_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "last_edited_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "has_children": false,
+          "in_trash": false,
+          "type": "table_row",
+          "table_row": {
+            "cells": [
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "이름",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "이름",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "설명",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "설명",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "Type",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "Type",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "기타",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "기타",
+                  "href": null
+                }
+              ]
+            ]
+          },
+          "archived": false
+        },
+        {
+          "object": "block",
+          "id": "3a101997-8f99-83ef-867d-810bfad92a54",
+          "parent": {
+            "type": "block_id",
+            "block_id": "7f401997-8f99-82c9-a0cb-01defd877b08"
+          },
+          "created_time": "2026-07-09T11:54:00.000Z",
+          "last_edited_time": "2026-07-09T11:54:00.000Z",
+          "created_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "last_edited_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "has_children": false,
+          "in_trash": false,
+          "type": "table_row",
+          "table_row": {
+            "cells": [
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "teamId",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "teamId",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "팀의 고유 ID",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "팀의 고유 ID",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "Long\n",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "Long\n",
+                  "href": null
+                }
+              ],
+              []
+            ]
+          },
+          "archived": false
+        }
+      ]
+    },
+    {
+      "object": "block",
+      "id": "e5101997-8f99-8381-a6cf-8100b7840a9c",
+      "parent": {
+        "type": "page_id",
+        "page_id": "d0601997-8f99-83a0-a0ba-81dfead7c387"
+      },
+      "created_time": "2026-07-09T11:54:00.000Z",
+      "last_edited_time": "2026-07-09T11:54:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "heading_3",
+      "heading_3": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "📌 Request Body",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "📌 Request Body",
+            "href": null
+          }
+        ],
+        "is_toggleable": false,
+        "color": "default"
+      },
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "ac301997-8f99-8257-a178-81e8f5391e71",
+      "parent": {
+        "type": "page_id",
+        "page_id": "d0601997-8f99-83a0-a0ba-81dfead7c387"
+      },
+      "created_time": "2026-07-09T11:54:00.000Z",
+      "last_edited_time": "2026-07-09T11:54:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": true,
+      "in_trash": false,
+      "type": "table",
+      "table": {
+        "table_width": 4,
+        "has_column_header": false,
+        "has_row_header": false
+      },
+      "archived": false,
+      "__children": [
+        {
+          "object": "block",
+          "id": "3d001997-8f99-82db-9f3c-012eb72bb41d",
+          "parent": {
+            "type": "block_id",
+            "block_id": "ac301997-8f99-8257-a178-81e8f5391e71"
+          },
+          "created_time": "2026-07-09T11:54:00.000Z",
+          "last_edited_time": "2026-07-09T11:54:00.000Z",
+          "created_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "last_edited_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "has_children": false,
+          "in_trash": false,
+          "type": "table_row",
+          "table_row": {
+            "cells": [
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "이름",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "이름",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "설명",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "설명",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "Type",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "Type",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "기타",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "기타",
+                  "href": null
+                }
+              ]
+            ]
+          },
+          "archived": false
+        },
+        {
+          "object": "block",
+          "id": "a2001997-8f99-8284-b0a6-01507ebe6dea",
+          "parent": {
+            "type": "block_id",
+            "block_id": "ac301997-8f99-8257-a178-81e8f5391e71"
+          },
+          "created_time": "2026-07-09T11:54:00.000Z",
+          "last_edited_time": "2026-07-09T11:54:00.000Z",
+          "created_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "last_edited_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "has_children": false,
+          "in_trash": false,
+          "type": "table_row",
+          "table_row": {
+            "cells": [
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "teamMemberName",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "teamMemberName",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "팀원명",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "팀원명",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "String",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "String",
+                  "href": null
+                }
+              ],
+              []
+            ]
+          },
+          "archived": false
+        },
+        {
+          "object": "block",
+          "id": "18c01997-8f99-8227-84da-017310b5e218",
+          "parent": {
+            "type": "block_id",
+            "block_id": "ac301997-8f99-8257-a178-81e8f5391e71"
+          },
+          "created_time": "2026-07-09T11:54:00.000Z",
+          "last_edited_time": "2026-07-09T11:54:00.000Z",
+          "created_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "last_edited_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "has_children": false,
+          "in_trash": false,
+          "type": "table_row",
+          "table_row": {
+            "cells": [
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "teamMemberStudentId",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "teamMemberStudentId",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "팀원학번",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "팀원학번",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "String",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "String",
+                  "href": null
+                }
+              ],
+              []
+            ]
+          },
+          "archived": false
+        },
+        {
+          "object": "block",
+          "id": "43b01997-8f99-82f5-b72c-81b6680599c3",
+          "parent": {
+            "type": "block_id",
+            "block_id": "ac301997-8f99-8257-a178-81e8f5391e71"
+          },
+          "created_time": "2026-07-09T11:54:00.000Z",
+          "last_edited_time": "2026-07-09T11:54:00.000Z",
+          "created_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "last_edited_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "has_children": false,
+          "in_trash": false,
+          "type": "table_row",
+          "table_row": {
+            "cells": [
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "roleType",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": true,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "roleType",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "팀원 권한",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": true,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "팀원 권한",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "TeamMemberRoleType",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": true,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "TeamMemberRoleType",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "ROLE_팀장\n혹은\nROLE_팀원",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": true,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "ROLE_팀장\n혹은\nROLE_팀원",
+                  "href": null
+                }
+              ]
+            ]
+          },
+          "archived": false
+        }
+      ]
+    },
+    {
+      "object": "block",
+      "id": "fe201997-8f99-8352-9695-8162575ab11b",
+      "parent": {
+        "type": "page_id",
+        "page_id": "d0601997-8f99-83a0-a0ba-81dfead7c387"
+      },
+      "created_time": "2026-07-09T11:54:00.000Z",
+      "last_edited_time": "2026-07-09T11:54:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "code",
+      "code": {
+        "caption": [],
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "POST /teams/{teamId}/members\nAuthorization: Bearer {ACCESS_TOKEN}\nContent-Type: application/json\n\n{\n  \"memberName\": \"문여원\",\n  \"memberStudentId\" : \"202355536\",\n  \"roleType\" : \"ROLE_팀원\"\n}",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "POST /teams/{teamId}/members\nAuthorization: Bearer {ACCESS_TOKEN}\nContent-Type: application/json\n\n{\n  \"memberName\": \"문여원\",\n  \"memberStudentId\" : \"202355536\",\n  \"roleType\" : \"ROLE_팀원\"\n}",
+            "href": null
+          }
+        ],
+        "language": "json"
+      },
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "8b401997-8f99-834d-aec6-81ac7a6503d4",
+      "parent": {
+        "type": "page_id",
+        "page_id": "d0601997-8f99-83a0-a0ba-81dfead7c387"
+      },
+      "created_time": "2026-07-09T11:54:00.000Z",
+      "last_edited_time": "2026-07-09T11:54:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "paragraph",
+      "paragraph": {
+        "rich_text": [],
+        "icon": null,
+        "color": "default"
+      },
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "f3701997-8f99-83bf-b566-81feebeb92eb",
+      "parent": {
+        "type": "page_id",
+        "page_id": "d0601997-8f99-83a0-a0ba-81dfead7c387"
+      },
+      "created_time": "2026-07-09T11:54:00.000Z",
+      "last_edited_time": "2026-07-09T11:54:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "divider",
+      "divider": {},
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "3d501997-8f99-8345-bd6a-01f7235179aa",
+      "parent": {
+        "type": "page_id",
+        "page_id": "d0601997-8f99-83a0-a0ba-81dfead7c387"
+      },
+      "created_time": "2026-07-09T11:54:00.000Z",
+      "last_edited_time": "2026-07-09T11:54:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "heading_1",
+      "heading_1": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "3. Response",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "3. Response",
+            "href": null
+          }
+        ],
+        "is_toggleable": false,
+        "color": "default"
+      },
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "2fc01997-8f99-83d0-8756-0159321402d7",
+      "parent": {
+        "type": "page_id",
+        "page_id": "d0601997-8f99-83a0-a0ba-81dfead7c387"
+      },
+      "created_time": "2026-07-09T11:54:00.000Z",
+      "last_edited_time": "2026-07-09T11:54:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "bulleted_list_item",
+      "bulleted_list_item": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "성공 (201 Created)",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "성공 (201 Created)",
+            "href": null
+          }
+        ],
+        "color": "default"
+      },
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "a5d01997-8f99-8286-960d-014ed190663a",
+      "parent": {
+        "type": "page_id",
+        "page_id": "d0601997-8f99-83a0-a0ba-81dfead7c387"
+      },
+      "created_time": "2026-07-09T11:54:00.000Z",
+      "last_edited_time": "2026-07-09T11:54:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "paragraph",
+      "paragraph": {
+        "rich_text": [],
+        "icon": null,
+        "color": "default"
+      },
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "13701997-8f99-8220-bf22-81b115f51fba",
+      "parent": {
+        "type": "page_id",
+        "page_id": "d0601997-8f99-83a0-a0ba-81dfead7c387"
+      },
+      "created_time": "2026-07-09T11:54:00.000Z",
+      "last_edited_time": "2026-07-09T11:54:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "bulleted_list_item",
+      "bulleted_list_item": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "예외 상황",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "예외 상황",
+            "href": null
+          }
+        ],
+        "color": "default"
+      },
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "05301997-8f99-8366-86b2-01b4ae4d6a3f",
+      "parent": {
+        "type": "page_id",
+        "page_id": "d0601997-8f99-83a0-a0ba-81dfead7c387"
+      },
+      "created_time": "2026-07-09T11:54:00.000Z",
+      "last_edited_time": "2026-07-09T11:54:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": true,
+      "in_trash": false,
+      "type": "table",
+      "table": {
+        "table_width": 3,
+        "has_column_header": false,
+        "has_row_header": false
+      },
+      "archived": false,
+      "__children": [
+        {
+          "object": "block",
+          "id": "1c301997-8f99-82b7-9230-0133a18fd1b1",
+          "parent": {
+            "type": "block_id",
+            "block_id": "05301997-8f99-8366-86b2-01b4ae4d6a3f"
+          },
+          "created_time": "2026-07-09T11:54:00.000Z",
+          "last_edited_time": "2026-07-09T11:54:00.000Z",
+          "created_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "last_edited_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "has_children": false,
+          "in_trash": false,
+          "type": "table_row",
+          "table_row": {
+            "cells": [
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "상황",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "상황",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "응답코드",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "응답코드",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "메시지",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "메시지",
+                  "href": null
+                }
+              ]
+            ]
+          },
+          "archived": false
+        },
+        {
+          "object": "block",
+          "id": "44301997-8f99-82b4-9609-81e5290297e2",
+          "parent": {
+            "type": "block_id",
+            "block_id": "05301997-8f99-8366-86b2-01b4ae4d6a3f"
+          },
+          "created_time": "2026-07-09T11:54:00.000Z",
+          "last_edited_time": "2026-07-09T11:54:00.000Z",
+          "created_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "last_edited_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "has_children": false,
+          "in_trash": false,
+          "type": "table_row",
+          "table_row": {
+            "cells": [
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "팀원명이 비어있음",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": true,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "팀원명이 비어있음",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "400",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": true,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "400",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "추가할 팀원명은 비어 있을 수 없습니다.",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": true,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "추가할 팀원명은 비어 있을 수 없습니다.",
+                  "href": null
+                }
+              ]
+            ]
+          },
+          "archived": false
+        },
+        {
+          "object": "block",
+          "id": "25a01997-8f99-8340-9e12-81ac68b3e08d",
+          "parent": {
+            "type": "block_id",
+            "block_id": "05301997-8f99-8366-86b2-01b4ae4d6a3f"
+          },
+          "created_time": "2026-07-09T11:54:00.000Z",
+          "last_edited_time": "2026-07-09T11:54:00.000Z",
+          "created_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "last_edited_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "has_children": false,
+          "in_trash": false,
+          "type": "table_row",
+          "table_row": {
+            "cells": [
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "팀원학번이 비어있음",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": true,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "팀원학번이 비어있음",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "400",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": true,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "400",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "추가할 팀원학번은 비어 있을 수 없습니다.",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": true,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "추가할 팀원학번은 비어 있을 수 없습니다.",
+                  "href": null
+                }
+              ]
+            ]
+          },
+          "archived": false
+        },
+        {
+          "object": "block",
+          "id": "caa01997-8f99-834a-92fc-01dcb032595d",
+          "parent": {
+            "type": "block_id",
+            "block_id": "05301997-8f99-8366-86b2-01b4ae4d6a3f"
+          },
+          "created_time": "2026-07-09T11:54:00.000Z",
+          "last_edited_time": "2026-07-09T11:54:00.000Z",
+          "created_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "last_edited_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "has_children": false,
+          "in_trash": false,
+          "type": "table_row",
+          "table_row": {
+            "cells": [
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "존재하지 않는 팀 ID인 경우",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": true,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "존재하지 않는 팀 ID인 경우",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "404",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": true,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "404",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "TEAM NOT FOUND",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": true,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "TEAM NOT FOUND",
+                  "href": null
+                }
+              ]
+            ]
+          },
+          "archived": false
+        },
+        {
+          "object": "block",
+          "id": "20601997-8f99-8265-8874-81eac611b701",
+          "parent": {
+            "type": "block_id",
+            "block_id": "05301997-8f99-8366-86b2-01b4ae4d6a3f"
+          },
+          "created_time": "2026-07-09T11:54:00.000Z",
+          "last_edited_time": "2026-07-09T11:54:00.000Z",
+          "created_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "last_edited_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "has_children": false,
+          "in_trash": false,
+          "type": "table_row",
+          "table_row": {
+            "cells": [
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "팀원명과 팀원학번이 맞지 않음",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": true,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "팀원명과 팀원학번이 맞지 않음",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "400",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": true,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "400",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "팀원명과 팀원학번이 일치하지 않습니다.",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": true,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "팀원명과 팀원학번이 일치하지 않습니다.",
+                  "href": null
+                }
+              ]
+            ]
+          },
+          "archived": false
+        },
+        {
+          "object": "block",
+          "id": "24701997-8f99-821a-b291-01a591e200e9",
+          "parent": {
+            "type": "block_id",
+            "block_id": "05301997-8f99-8366-86b2-01b4ae4d6a3f"
+          },
+          "created_time": "2026-07-09T11:54:00.000Z",
+          "last_edited_time": "2026-07-09T11:54:00.000Z",
+          "created_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "last_edited_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "has_children": false,
+          "in_trash": false,
+          "type": "table_row",
+          "table_row": {
+            "cells": [
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "동일한 참가자명 + 학번이 해당 팀에 있는 경우",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": true,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "동일한 참가자명 + 학번이 해당 팀에 있는 경우",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "409 Conflict",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": true,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "409 Conflict",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "Participant already exists.",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": true,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "Participant already exists.",
+                  "href": null
+                }
+              ]
+            ]
+          },
+          "archived": false
+        },
+        {
+          "object": "block",
+          "id": "79301997-8f99-829e-9a9a-01a55a9bbd98",
+          "parent": {
+            "type": "block_id",
+            "block_id": "05301997-8f99-8366-86b2-01b4ae4d6a3f"
+          },
+          "created_time": "2026-07-09T11:54:00.000Z",
+          "last_edited_time": "2026-07-09T11:54:00.000Z",
+          "created_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "last_edited_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "has_children": false,
+          "in_trash": false,
+          "type": "table_row",
+          "table_row": {
+            "cells": [
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "인증되지 않은 사용자",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": true,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "인증되지 않은 사용자",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "401",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": true,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "401",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "Unauthorized",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": true,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "Unauthorized",
+                  "href": null
+                }
+              ]
+            ]
+          },
+          "archived": false
+        },
+        {
+          "object": "block",
+          "id": "1ae01997-8f99-8396-90a4-818b6701fcf3",
+          "parent": {
+            "type": "block_id",
+            "block_id": "05301997-8f99-8366-86b2-01b4ae4d6a3f"
+          },
+          "created_time": "2026-07-09T11:54:00.000Z",
+          "last_edited_time": "2026-07-09T11:54:00.000Z",
+          "created_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "last_edited_by": {
+            "object": "user",
+            "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+          },
+          "has_children": false,
+          "in_trash": false,
+          "type": "table_row",
+          "table_row": {
+            "cells": [
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "관리자가 아닌 사용자가 삭제 요청한 경우",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": true,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "관리자가 아닌 사용자가 삭제 요청한 경우",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "403 ",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": true,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "403 ",
+                  "href": null
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": {
+                    "content": "관리자가 아닙니다.",
+                    "link": null
+                  },
+                  "annotations": {
+                    "bold": true,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                  },
+                  "plain_text": "관리자가 아닙니다.",
+                  "href": null
+                }
+              ]
+            ]
+          },
+          "archived": false
+        }
+      ]
+    },
+    {
+      "object": "block",
+      "id": "d3601997-8f99-82ce-b384-813794416152",
+      "parent": {
+        "type": "page_id",
+        "page_id": "d0601997-8f99-83a0-a0ba-81dfead7c387"
+      },
+      "created_time": "2026-07-09T11:54:00.000Z",
+      "last_edited_time": "2026-07-09T11:54:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "bulleted_list_item",
+      "bulleted_list_item": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "관리자, 팀장 등이 팀 생성/수정 중 팀원을 등록할 때",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "관리자, 팀장 등이 팀 생성/수정 중 팀원을 등록할 때",
+            "href": null
+          }
+        ],
+        "color": "default"
+      },
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "58701997-8f99-8378-a935-8104f3646f11",
+      "parent": {
+        "type": "page_id",
+        "page_id": "d0601997-8f99-83a0-a0ba-81dfead7c387"
+      },
+      "created_time": "2026-07-09T11:54:00.000Z",
+      "last_edited_time": "2026-07-09T11:54:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "bulleted_list_item",
+      "bulleted_list_item": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "아직 회원가입하지 않은 팀원이라면 ",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "아직 회원가입하지 않은 팀원이라면 ",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "학번+이름",
+              "link": null
+            },
+            "annotations": {
+              "bold": true,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "학번+이름",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "과 ",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "과 ",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "fake_비밀번호",
+              "link": null
+            },
+            "annotations": {
+              "bold": true,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "fake_비밀번호",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "로 ",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "로 ",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "Member",
+              "link": null
+            },
+            "annotations": {
+              "bold": true,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Member",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": " 저장",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": " 저장",
+            "href": null
+          }
+        ],
+        "color": "default"
+      },
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "6ee01997-8f99-8393-91be-014f5da9ea43",
+      "parent": {
+        "type": "page_id",
+        "page_id": "d0601997-8f99-83a0-a0ba-81dfead7c387"
+      },
+      "created_time": "2026-07-09T11:54:00.000Z",
+      "last_edited_time": "2026-07-09T11:54:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "bulleted_list_item",
+      "bulleted_list_item": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "회원가입 시점에 학번+이름이 이미 있고 fake_비밀번호라면 덮어쓰기",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "회원가입 시점에 학번+이름이 이미 있고 fake_비밀번호라면 덮어쓰기",
+            "href": null
+          }
+        ],
+        "color": "default"
+      },
+      "archived": false
+    },
+    {
+      "object": "block",
+      "id": "31601997-8f99-82b2-b894-81e7ec088f8d",
+      "parent": {
+        "type": "page_id",
+        "page_id": "d0601997-8f99-83a0-a0ba-81dfead7c387"
+      },
+      "created_time": "2026-07-09T11:54:00.000Z",
+      "last_edited_time": "2026-07-09T11:54:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4730edd-3b33-45bf-bf1c-878cc5da2dc6"
+      },
+      "has_children": false,
+      "in_trash": false,
+      "type": "paragraph",
+      "paragraph": {
+        "rich_text": [],
+        "icon": null,
+        "color": "default"
+      },
+      "archived": false
+    }
+  ]
+}
