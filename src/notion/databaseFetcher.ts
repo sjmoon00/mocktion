@@ -59,20 +59,33 @@ export async function fetchPages(
     cursor = response.has_more ? response.next_cursor ?? undefined : undefined;
   } while (cursor);
 
+  return filterPagesByStatus(pages, statusFilter);
+}
+
+export function filterPagesByStatus(pages: PageObjectResponse[], statusFilter?: string): FetchPagesResult {
   if (!statusFilter) {
     return { pages, skipped: [] };
   }
 
   const matched: PageObjectResponse[] = [];
   const skipped: SkippedPage[] = [];
+  let anyStatusValueFound = false;
 
   for (const page of pages) {
     const statusValue = readStatusValue(page.properties['상태']);
+    if (statusValue !== undefined) anyStatusValueFound = true;
+
     if (statusValue === statusFilter) {
       matched.push(page);
     } else {
       skipped.push({ displayName: readTitleDisplayName(page.properties), statusValue: statusValue ?? '(없음)' });
     }
+  }
+
+  if (pages.length > 0 && !anyStatusValueFound) {
+    console.warn(
+      `⚠️  '상태' 프로퍼티를 가진 페이지를 찾을 수 없습니다. --status 필터(${statusFilter})가 전체 페이지를 스킵했을 수 있습니다.`
+    );
   }
 
   return { pages: matched, skipped };

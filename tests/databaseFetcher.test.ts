@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { Client } from '@notionhq/client';
-import { fetchPages, parseDatabaseId } from '../src/notion/databaseFetcher';
+import type { Client, PageObjectResponse } from '@notionhq/client';
+import { fetchPages, filterPagesByStatus, parseDatabaseId } from '../src/notion/databaseFetcher';
 
 function fakePage(id: string) {
   return {
@@ -9,6 +9,22 @@ function fakePage(id: string) {
     url: `https://notion.so/${id}`,
     properties: {},
   };
+}
+
+function fakePageWithStatus(
+  id: string,
+  status: { type: 'status' | 'select'; name: string } | undefined,
+  titleText = '제목'
+): PageObjectResponse {
+  return {
+    object: 'page',
+    id,
+    url: `https://notion.so/${id}`,
+    properties: {
+      ...(status ? { 상태: { type: status.type, [status.type]: { name: status.name } } } : {}),
+      기능명: { type: 'title', title: [{ plain_text: titleText }] },
+    },
+  } as unknown as PageObjectResponse;
 }
 
 describe('parseDatabaseId', () => {
@@ -58,5 +74,45 @@ describe('fetchPages', () => {
 
     expect(result.pages.map((p) => p.id)).toEqual(['p1', 'p2']);
     expect(query).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe('filterPagesByStatus', () => {
+  it('statusFilter가 없으면 전체 페이지를 그대로 반환한다', () => {
+    const pages = [fakePageWithStatus('p1', { type: 'status', name: '완료' })];
+
+    const result = filterPagesByStatus(pages, undefined);
+
+    expect(result).toEqual({ pages, skipped: [] });
+  });
+
+  it('status 타입 프로퍼티 값이 일치하는 페이지만 남기고 나머지는 스킵 목록에 담는다', () => {
+    const pages = [
+      fakePageWithStatus('p1', { type: 'status', name: '완료' }, '완료된 API'),
+      fakePageWithStatus('p2', { type: 'status', name: '논의필요' }, '논의중 API'),
+    ];
+
+    const result = filterPagesByStatus(pages, '완료');
+
+    expect(result.pages.map((p) => p.id)).toEqual(['p1']);
+    expect(result.skipped).toEqual([{ displayName: '논의중 API', statusValue: '논의필요' }]);
+  });
+
+  it('select 타입 상태 프로퍼티도 동일하게 처리한다', () => {
+    const pages = [fakePageWithStatus('p1', { type: 'select', name: '완료' })];
+
+    const result = filterPagesByStatus(pages, '완료');
+
+    expect(result.pages.map((p) => p.id)).toEqual(['p1']);
+  });
+
+  it('모든 페이지에 "상태" 프로퍼티가 없으면 경고를 남긴다', () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const pages = [fakePageWithStatus('p1', undefined), fakePageWithStatus('p2', undefined)];
+
+    filterPagesByStatus(pages, '완료');
+
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("'상태' 프로퍼티를 가진 페이지를 찾을 수 없습니다"));
+    warnSpy.mockRestore();
   });
 });
