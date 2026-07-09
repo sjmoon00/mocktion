@@ -118,22 +118,22 @@ notion-mockserver/
 
 ### Phase 1: 파싱 모듈 (+ 단위 테스트 병행)
 
-- [ ] `richText.ts` — plain_text 병합 유틸
-- [ ] `databaseFetcher.ts` — URL→ID 추출 (32hex, 하이픈/쿼리스트링 처리)
-- [ ] `databaseFetcher.ts` — data_source 조회 + 페이지네이션 (`has_more` 루프)
-- [ ] `databaseFetcher.ts` — 상태 필터: 프로퍼티 타입 감지 후 select/status 분기, 그 외 타입은 클라이언트 사이드 필터링
-- [ ] `databaseFetcher.ts` — 스킵된 페이지 목록 수집(표시명은 `기능명` title 프로퍼티 사용, 스펙 4.4절 콘솔 출력 형식과 일치) + 경고 출력
-- [ ] `propertyExtractor.ts` — Method/응답코드는 `multi_select` 배열의 첫 값 사용(0개면 스킵+경고, 2개 이상이면 경고 후 첫 값 사용), URI는 `rich_text`, 표시명은 `기능명`(title)에서 추출. 필수 누락 시 스킵 + 경고
-- [ ] `blockParser.ts` — 블록 트리 재귀 탐색 + children 페이지네이션
-- [ ] `responseJsonExtractor.ts` — 첫 줄 패턴 분류 (`{METHOD} /` → 무시, `HTTP/1.1` → 상태줄 제거 후 본문 추출, `{`/`[` → 본문)
-- [ ] `responseJsonExtractor.ts` — 3단계 우선순위 (204 → 응답 블록 → `{}`)
-- [ ] `responseJsonExtractor.ts` — JSON.parse 검증 경고, 복수 응답 후보 시 첫 번째 사용 + 경고
-- [ ] `errorCaseParser.ts` — "예외 상황" 텍스트 탐색은 `paragraph`로 한정하지 않고 rich_text를 가진 모든 블록 타입(`bulleted_list_item` 포함 — 실 데이터에서 이 타입으로 확인됨)을 순회. 이후 빈 블록을 건너뛰고 첫 `table` 블록까지 탐색
-- [ ] `errorCaseParser.ts` — `has_column_header` 우선 확인(실 데이터는 전부 `false`라 첫 행 헤더 폴백이 기본 경로), 응답코드 셀 선행 정수 추출 + trim(`"409 Conflict"`, `"403 "` 등 실제 확인됨)
-- [ ] 단위 테스트: `databaseFetcher.test.ts` (URL→ID 추출)
-- [ ] 단위 테스트: `propertyExtractor.test.ts` (multi_select 0개/1개/2개, rich_text URI, 기능명 title 추출 케이스)
-- [ ] 단위 테스트: `responseJsonExtractor.test.ts` — `tests/fixtures/{get-200-submission-detail,post-201-team-member,put-204-sort,delete-204-category}.json` 4개로 GET(응답 JSON 있음)/POST(없음→`{}`)/PUT(204 우선 처리)/DELETE(204, 요청 code 블록이 `java` 태그라도 정상 무시) 네 분기 고정
-- [ ] 단위 테스트: `errorCaseParser.test.ts` — `tests/fixtures/post-201-team-member.json`로 7개 에러 케이스(400×3, 404×1, 409×1, 401×1, 403×1) 추출 고정, `bulleted_list_item` 기반 "예외 상황" 탐색과 선행 정수 추출 포함
+- [x] `richText.ts` — plain_text 병합 유틸
+- [x] `databaseFetcher.ts` — URL→ID 추출 (32hex, 하이픈/쿼리스트링 처리) — SDK 제공 `extractDatabaseId` 헬퍼를 래핑해 사용 (D-009)
+- [x] `databaseFetcher.ts` — data_source 조회 + 페이지네이션 (`has_more` 루프)
+- [x] `databaseFetcher.ts` — 상태 필터: 전량 조회 후 클라이언트 사이드에서 select/status 값을 읽어 필터링 (D-010, 계획서의 서버사이드 select/status 분기 대신 단순화)
+- [x] `databaseFetcher.ts` — 스킵된 페이지 목록 수집(표시명은 `기능명` title 프로퍼티 사용, 스펙 4.4절 콘솔 출력 형식과 일치) + 경고 출력
+- [x] `propertyExtractor.ts` — Method/응답코드는 `multi_select` 배열의 첫 값 사용(0개면 스킵+경고, 2개 이상이면 경고 후 첫 값 사용), URI는 `rich_text`, 표시명은 `기능명`(title)에서 추출. 필수 누락 시 스킵 + 경고
+- [x] `blockParser.ts` — 블록 트리 재귀 탐색 + children 페이지네이션
+- [x] `responseJsonExtractor.ts` — 첫 줄 패턴 분류 (`{METHOD} /` → 무시, `HTTP/1.1` → 상태줄 제거 후 본문 추출, `{`/`[` → 본문)
+- [x] `responseJsonExtractor.ts` — 3단계 우선순위 (204 → 응답 블록 → `{}`)
+- [x] `responseJsonExtractor.ts` — JSON.parse 검증 경고, 복수 응답 후보 시 첫 번째 사용 + 경고
+- [x] `errorCaseParser.ts` — "예외 상황" 텍스트 탐색은 `paragraph`로 한정하지 않고 rich_text를 가진 모든 블록 타입(`bulleted_list_item` 포함 — 실 데이터에서 이 타입으로 확인됨)을 순회. 이후 빈 블록을 건너뛰고 첫 `table` 블록까지 탐색
+- [x] `errorCaseParser.ts` — `has_column_header` 우선 확인(실 데이터는 전부 `false`라 첫 행 헤더 폴백이 기본 경로), 응답코드 셀 선행 정수 추출 + trim(`"409 Conflict"`, `"403 "` 등 실제 확인됨)
+- [x] 단위 테스트: `databaseFetcher.test.ts` (URL→ID 추출)
+- [x] 단위 테스트: `propertyExtractor.test.ts` (multi_select 0개/1개/2개, rich_text URI, 기능명 title 추출 케이스)
+- [x] 단위 테스트: `responseJsonExtractor.test.ts` — `tests/fixtures/{get-200-submission-detail,post-201-team-member,put-204-sort,delete-204-category}.json` 4개로 GET(응답 JSON 있음)/POST(없음→`{}`)/PUT(204 우선 처리)/DELETE(204, 요청 code 블록이 `java` 태그라도 정상 무시) 네 분기 고정
+- [x] 단위 테스트: `errorCaseParser.test.ts` — `tests/fixtures/post-201-team-member.json`로 7개 에러 케이스(400×3, 404×1, 409×1, 401×1, 403×1) 추출 고정, `bulleted_list_item` 기반 "예외 상황" 탐색과 선행 정수 추출 포함
 
 ### Phase 2: 목서버 + CLI 통합
 

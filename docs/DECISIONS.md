@@ -74,3 +74,30 @@
 - **결정**: `cors` 패키지를 추가하고 `app.use(cors())`로 전체 허용.
 - **검토한 대안**: CORS 미처리(계획서 원안).
 - **근거**: 주 사용자가 브라우저(`localhost:3000` 등)에서 `fetch()`를 호출하는 프론트엔드 개발자라는 점을 감안하면, CORS 없이는 이 도구의 핵심 시나리오 자체가 동작하지 않는다. 계획서를 처음 검토하는 단계에서 발견해 반드시 보완해야 할 항목으로 승격시켰다. (근거: IMPLEMENTATION_PLAN.md "기존 계획서 검토" #1)
+
+---
+
+## D-009: DB URL → database_id 추출은 자체 정규식 대신 SDK의 `extractDatabaseId` 헬퍼를 래핑
+
+- **배경**: 계획서(및 spec 3절)는 `https://www.notion.so/{workspace}/{제목}-{32hex}?v={view}` 형태에서 32자리 hex를 직접 정규식으로 추출하는 로직을 전제로 했다. Phase 1 구현 중 `@notionhq/client`(v5.23.0)의 타입 선언(`helpers.d.ts`)을 확인한 결과 `extractDatabaseId`/`extractNotionId`가 이미 공식 헬퍼로 export되어 있고, 하이픈 유무·쿼리스트링·URL 경로 우선 추출까지 계획서가 요구한 처리를 전부 포함하고 있음을 발견했다.
+- **결정**: `databaseFetcher.ts`의 `parseDatabaseId()`는 자체 정규식 대신 SDK의 `extractDatabaseId`를 호출하고, 실패 시(`null` 반환 시) 우리 쪽에서 명확한 에러 메시지를 던지는 얇은 래퍼로 구현.
+- **검토한 대안**: 계획서 원안의 자체 정규식 구현.
+- **근거**: 이미 검증된 공식 구현이 존재하는데 동일한 로직을 재작성하는 것은 불필요한 중복이다. 얇은 래퍼로 감싸 에러 메시지만 프로젝트 관례에 맞게 조정하는 편이 더 단순하고 신뢰도가 높다.
+
+---
+
+## D-010: `--status` 필터는 서버사이드 select/status 분기 대신 전량 조회 후 클라이언트 사이드 필터링
+
+- **배경**: 계획서는 "상태 프로퍼티 타입(select/status)을 감지해 Notion API 필터를 분기하고, 그 외 타입만 클라이언트 사이드로 폴백"하는 방식을 제안했다. 하지만 Phase 0에서 `상태` 프로퍼티가 실제로는 항상 `status` 타입임이 이미 확인됐고(Phase 0 검증 결과 #3), DB 전체 페이지 수도 120개 수준(Phase 0 검증 결과 #8)으로 전량 조회의 비용이 크지 않다.
+- **결정**: 서버사이드 필터 없이 `dataSources.query`로 전체 페이지를 조회한 뒤, 각 페이지의 `상태` 프로퍼티 값(`select.name` 또는 `status.name`)을 읽어 클라이언트 사이드에서 비교한다. 타입 감지·분기 로직 자체를 제거했다.
+- **검토한 대안**: 계획서 원안대로 데이터소스 스키마를 먼저 조회해 `상태` 프로퍼티 타입을 감지하고 select/status 필터를 분기.
+- **근거**: 타입 감지를 위한 추가 API 호출(`dataSources.retrieve`)과 분기 로직을 없애는 대신 얻는 이득(수십~백여 개 수준 페이지에서 무시할 만한 조회 비용 증가) 대비 코드가 훨씬 단순해지고, select 외의 프로퍼티 타입이 와도 자동으로 대응 가능해 더 견고하다. "심플리시티 우선" 원칙에 따른 의도적 스코프 축소.
+
+---
+
+## D-011: Notion 페이지네이션은 SDK의 `collectPaginatedAPI` 대신 수동 `has_more`/`next_cursor` 루프
+
+- **배경**: `@notionhq/client`는 `collectPaginatedAPI(listFn, args)` 제네릭 헬퍼를 제공해 페이지네이션 루프를 대신 처리해준다. 처음에는 `notion.blocks.children.list`/`notion.dataSources.query`에 이 헬퍼를 적용해 코드를 줄이려 했다.
+- **결정**: 수동 `do...while(cursor)` 루프로 구현.
+- **검토한 대안**: `collectPaginatedAPI` 사용.
+- **근거**: v5.23.0 기준 `ListBlockChildrenParameters`/`QueryDataSourceParameters`의 `start_cursor` 필드가 `string | null | undefined`인 반면, `collectPaginatedAPI`의 제네릭 제약 `PaginatedArgs`는 `string | undefined`만 허용해 `strict` 모드에서 타입 에러가 발생했다(SDK 자체의 타입 선언 불일치). 제네릭 타입 인자를 억지로 맞추기보다 원래 계획서가 요구한 수동 루프를 그대로 구현하는 편이 더 간단하고 타입 안전했다.
