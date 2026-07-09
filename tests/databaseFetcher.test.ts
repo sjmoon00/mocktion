@@ -1,5 +1,15 @@
-import { describe, expect, it } from 'vitest';
-import { parseDatabaseId } from '../src/notion/databaseFetcher';
+import { describe, expect, it, vi } from 'vitest';
+import type { Client } from '@notionhq/client';
+import { fetchPages, parseDatabaseId } from '../src/notion/databaseFetcher';
+
+function fakePage(id: string) {
+  return {
+    object: 'page',
+    id,
+    url: `https://notion.so/${id}`,
+    properties: {},
+  };
+}
 
 describe('parseDatabaseId', () => {
   it('URL 경로의 32자리 hex(하이픈 없음)에서 database_id를 추출한다', () => {
@@ -22,5 +32,31 @@ describe('parseDatabaseId', () => {
     expect(() => parseDatabaseId('https://example.com/not-a-notion-url')).toThrow(
       /database_id를 추출할 수 없습니다/
     );
+  });
+});
+
+describe('fetchPages', () => {
+  it('has_more=true인데 next_cursor가 없으면 에러를 던진다', async () => {
+    const query = vi.fn().mockResolvedValue({
+      results: [fakePage('p1')],
+      has_more: true,
+      next_cursor: null,
+    });
+    const notion = { dataSources: { query } } as unknown as Client;
+
+    await expect(fetchPages(notion, 'data-source-1')).rejects.toThrow(/비정상/);
+  });
+
+  it('has_more/next_cursor로 정상 페이지네이션하며 모든 페이지를 수집한다', async () => {
+    const query = vi
+      .fn()
+      .mockResolvedValueOnce({ results: [fakePage('p1')], has_more: true, next_cursor: 'cursor-1' })
+      .mockResolvedValueOnce({ results: [fakePage('p2')], has_more: false, next_cursor: null });
+    const notion = { dataSources: { query } } as unknown as Client;
+
+    const result = await fetchPages(notion, 'data-source-1');
+
+    expect(result.pages.map((p) => p.id)).toEqual(['p1', 'p2']);
+    expect(query).toHaveBeenCalledTimes(2);
   });
 });

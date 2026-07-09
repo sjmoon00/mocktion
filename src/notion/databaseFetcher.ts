@@ -53,6 +53,9 @@ export async function fetchPages(
   do {
     const response = await notion.dataSources.query({ data_source_id: dataSourceId, start_cursor: cursor });
     pages.push(...response.results.filter(isFullPage));
+    if (response.has_more && !response.next_cursor) {
+      throw new Error('Notion API 페이지네이션 응답이 비정상입니다: has_more=true인데 next_cursor가 없습니다.');
+    }
     cursor = response.has_more ? response.next_cursor ?? undefined : undefined;
   } while (cursor);
 
