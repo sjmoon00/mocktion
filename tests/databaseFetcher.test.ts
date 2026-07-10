@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { Client, PageObjectResponse } from '@notionhq/client';
-import { fetchPages, filterPagesByStatus, parseDatabaseId } from '../src/notion/databaseFetcher';
+import { fetchPages, filterPagesByStatus, parseDatabaseId, resolveDataSourceId } from '../src/notion/databaseFetcher';
 
 function fakePage(id: string) {
   return {
@@ -48,6 +48,39 @@ describe('parseDatabaseId', () => {
     expect(() => parseDatabaseId('https://example.com/not-a-notion-url')).toThrow(
       /database_id를 추출할 수 없습니다/
     );
+  });
+});
+
+describe('resolveDataSourceId', () => {
+  it('데이터소스가 1개면 그 id를 반환한다', async () => {
+    const retrieve = vi.fn().mockResolvedValue({ object: 'database', data_sources: [{ id: 'ds-1' }] });
+    const notion = { databases: { retrieve } } as unknown as Client;
+
+    await expect(resolveDataSourceId(notion, 'db-1')).resolves.toBe('ds-1');
+  });
+
+  it('데이터소스가 0개면 명확한 에러를 던진다', async () => {
+    const retrieve = vi.fn().mockResolvedValue({ object: 'database', data_sources: [] });
+    const notion = { databases: { retrieve } } as unknown as Client;
+
+    await expect(resolveDataSourceId(notion, 'db-1')).rejects.toThrow(/데이터소스 ID를 찾을 수 없습니다/);
+  });
+
+  it('데이터소스가 2개 이상이면 개수를 포함한 멀티 데이터소스 에러를 던진다', async () => {
+    const retrieve = vi.fn().mockResolvedValue({
+      object: 'database',
+      data_sources: [{ id: 'ds-1' }, { id: 'ds-2' }],
+    });
+    const notion = { databases: { retrieve } } as unknown as Client;
+
+    await expect(resolveDataSourceId(notion, 'db-1')).rejects.toThrow(/멀티 데이터소스.*2개/);
+  });
+
+  it('database 응답이 아니면(isFullDatabase 실패) 명확한 에러를 던진다', async () => {
+    const retrieve = vi.fn().mockResolvedValue({ object: 'page' });
+    const notion = { databases: { retrieve } } as unknown as Client;
+
+    await expect(resolveDataSourceId(notion, 'db-1')).rejects.toThrow(/데이터소스 ID를 찾을 수 없습니다/);
   });
 });
 
