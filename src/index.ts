@@ -14,6 +14,12 @@ program.parse();
 const opts = program.opts<{ db: string; status?: string; port: string }>();
 
 async function main(): Promise<void> {
+  const port = parseInt(opts.port, 10);
+  if (Number.isNaN(port) || port < 0 || port > 65535) {
+    console.error(`[notion-mock] 오류: --port 값이 올바르지 않습니다: "${opts.port}" (0~65535 사이 숫자를 입력하세요)`);
+    process.exit(1);
+  }
+
   const notion = createNotionClient();
 
   console.log('[notion-mock] Notion DB 연결 중...');
@@ -38,7 +44,7 @@ async function main(): Promise<void> {
     console.warn(`  ⚠️  스킵됨: ${s.displayName} — ${s.reason}`);
   }
 
-  startMockServer(specs, parseInt(opts.port, 10));
+  startMockServer(specs, port);
 }
 
 main().catch((err) => {
