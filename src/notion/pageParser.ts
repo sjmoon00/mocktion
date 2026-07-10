@@ -25,15 +25,24 @@ export async function parsePage(notion: Client, page: PageObjectResponse): Promi
     return { ok: false, displayName: propResult.displayName, reason: propResult.reason };
   }
 
-  const { method, uriPattern, successStatusCode, displayName } = propResult.value;
-  const blocks = await fetchBlockTree(notion, page.id);
-  const { hasBody, successResponseJson } = extractResponseJson(blocks, successStatusCode);
-  const errorCases = extractErrorCases(blocks);
+  const { method, uriPattern, successStatusCode } = propResult.value;
 
-  return {
-    ok: true,
-    spec: { method, uriPattern, successStatusCode, hasBody, successResponseJson, errorCases },
-  };
+  try {
+    const blocks = await fetchBlockTree(notion, page.id);
+    const { hasBody, successResponseJson } = extractResponseJson(blocks, successStatusCode);
+    const errorCases = extractErrorCases(blocks);
+
+    return {
+      ok: true,
+      spec: { method, uriPattern, successStatusCode, hasBody, successResponseJson, errorCases },
+    };
+  } catch (e) {
+    return {
+      ok: false,
+      displayName: propResult.value.displayName,
+      reason: `블록 파싱 실패: ${e instanceof Error ? e.message : e}`,
+    };
+  }
 }
 
 export async function parseAllPages(notion: Client, pages: PageObjectResponse[]): Promise<ParseAllResult> {
