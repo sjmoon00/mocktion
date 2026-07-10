@@ -2,7 +2,7 @@ import type { ErrorCase } from '../types/domain';
 import type { BlockWithChildren } from './blockParser';
 import { joinRichText } from './richText';
 
-export function extractErrorCases(blocks: BlockWithChildren[]): ErrorCase[] {
+export function extractErrorCases(blocks: BlockWithChildren[], pageLabel = '(알 수 없는 페이지)'): ErrorCase[] {
   const flatBlocks = flattenBlocks(blocks);
   const startIndex = flatBlocks.findIndex((block) => getBlockText(block).includes('예외 상황'));
   if (startIndex === -1) return [];
@@ -10,7 +10,7 @@ export function extractErrorCases(blocks: BlockWithChildren[]): ErrorCase[] {
   for (let i = startIndex + 1; i < flatBlocks.length; i++) {
     const block = flatBlocks[i];
     if (block.type === 'table') {
-      return parseErrorTable(block);
+      return parseErrorTable(block, pageLabel);
     }
   }
 
@@ -34,7 +34,7 @@ function getBlockText(block: BlockWithChildren): string {
   return joinRichText(content.rich_text);
 }
 
-function parseErrorTable(tableBlock: BlockWithChildren): ErrorCase[] {
+function parseErrorTable(tableBlock: BlockWithChildren, pageLabel: string): ErrorCase[] {
   const rows = (tableBlock.__children ?? []).filter((block) => block.type === 'table_row');
   const dataRows = rows.slice(1);
 
@@ -45,7 +45,7 @@ function parseErrorTable(tableBlock: BlockWithChildren): ErrorCase[] {
     const cells = tableRow.cells;
 
     if (cells.length < 3) {
-      console.warn(`⚠️  예외 상황 테이블 컬럼이 3개 미만입니다 (${cells.length}개). 메시지가 비어있을 수 있습니다.`);
+      console.warn(`⚠️  [${pageLabel}] 예외 상황 테이블 컬럼이 3개 미만입니다 (${cells.length}개). 메시지가 비어있을 수 있습니다.`);
     }
 
     const situation = joinRichText(cells[0]);
@@ -54,7 +54,7 @@ function parseErrorTable(tableBlock: BlockWithChildren): ErrorCase[] {
 
     const codeMatch = codeText.match(/^(\d+)/);
     if (!codeMatch) {
-      console.warn(`⚠️  응답코드에서 숫자를 찾을 수 없어 스킵합니다: "${situation}" → "${codeText}"`);
+      console.warn(`⚠️  [${pageLabel}] 응답코드에서 숫자를 찾을 수 없어 스킵합니다: "${situation}" → "${codeText}"`);
       continue;
     }
 

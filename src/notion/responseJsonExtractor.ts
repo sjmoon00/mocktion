@@ -6,7 +6,11 @@ export interface ResponseJsonResult {
   successResponseJson: string;
 }
 
-export function extractResponseJson(blocks: BlockWithChildren[], successStatusCode: number): ResponseJsonResult {
+export function extractResponseJson(
+  blocks: BlockWithChildren[],
+  successStatusCode: number,
+  pageLabel = '(알 수 없는 페이지)'
+): ResponseJsonResult {
   if (successStatusCode === 204) {
     return { hasBody: false, successResponseJson: '{}' };
   }
@@ -20,14 +24,14 @@ export function extractResponseJson(blocks: BlockWithChildren[], successStatusCo
   }
 
   if (candidates.length > 1) {
-    console.warn('⚠️  응답 예시 code 블록이 여러 개 발견되어 첫 번째를 사용합니다.');
+    console.warn(`⚠️  [${pageLabel}] 응답 예시 code 블록이 여러 개 발견되어 첫 번째를 사용합니다.`);
   }
 
   const json = candidates[0];
   try {
     JSON.parse(json);
   } catch {
-    console.warn('⚠️  유효하지 않은 JSON입니다. 빈 객체로 대체합니다.');
+    console.warn(`⚠️  [${pageLabel}] 유효하지 않은 JSON입니다. 빈 객체로 대체합니다.`);
     return { hasBody: false, successResponseJson: '{}' };
   }
 

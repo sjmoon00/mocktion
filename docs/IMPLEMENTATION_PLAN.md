@@ -186,6 +186,22 @@ notion-mockserver/
 
 **순서**: Unit 1 → Unit 2 → Unit 3(사용자 확인 후) → Unit 4(게이트) → Unit 5. 각 단위 완료·검증 즉시 그 자리에서 커밋(CLAUDE.md 원칙). Phase 3 전체 완료 — `docs/AI_COLLABORATION_LOG.md`에 세션 기록 추가함.
 
+### Phase 4: 실사용 피드백 대응
+
+**배경**: Phase 3 완료 후 실 DB(`--db` 실제 URL)로 직접 실행한 결과, 파싱 경고 로그(`⚠️ 응답코드에서 숫자를 찾을 수 없어...`, `⚠️ 유효하지 않은 JSON입니다...` 등)가 정확히 어느 Notion 페이지에서 발생했는지 식별할 수 없다는 문제 발견. `pageParser.ts`가 페이지 단위로 순회하며 페이지 제목(`displayName`)과 URL(`page.url`)을 이미 갖고 있음에도, 경고를 실제로 출력하는 `responseJsonExtractor.ts`/`errorCaseParser.ts`/`propertyExtractor.ts`의 함수들에는 이 정보가 전달되지 않고 있었다.
+
+**구현 단위 (커밋 경계):**
+
+- [x] **Unit 1 — 파싱 경고 로그에 페이지 식별 정보(제목+URL) 추가**
+  - `src/notion/responseJsonExtractor.ts`: `extractResponseJson(blocks, successStatusCode, pageLabel?)` 시그니처에 `pageLabel` 추가(기본값 `'(알 수 없는 페이지)'`), 두 warn에 `[${pageLabel}]` 접두사 적용.
+  - `src/notion/errorCaseParser.ts`: `extractErrorCases(blocks, pageLabel?)` → `parseErrorTable(tableBlock, pageLabel?)`까지 전달, 두 warn에 접두사 적용.
+  - `src/notion/propertyExtractor.ts`: 이미 계산된 `displayName`(15행)을 `extractMultiSelectFirst(prop, displayName)`에 전달해 warn에 접두사 적용. 외부 `extractProperties` 시그니처는 변경 없음.
+  - `src/notion/pageParser.ts`: `parsePage` 내부에서 `pageLabel = \`${displayName} (${page.url})\`` 생성 후 위 호출부에 전달.
+  - 검증: `npm run build` + `npm test`(기존 55개 테스트 무변경 통과 — 새 파라미터는 옵션이라 기존 호출부 영향 없음) + 실 DB로 `npm run dev` 재실행해 경고 줄마다 페이지 제목+URL이 붙는지 육안 확인.
+  - 커밋: `fix(notion): 파싱 경고 로그에 페이지 식별 정보(제목+URL) 추가`
+
+**순서**: Unit 1 단독 (단일 논리 변경, 커밋 경계 분리 불필요).
+
 ---
 
 ## 검증 방법

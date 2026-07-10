@@ -25,12 +25,13 @@ export async function parsePage(notion: Client, page: PageObjectResponse): Promi
     return { ok: false, displayName: propResult.displayName, reason: propResult.reason };
   }
 
-  const { method, uriPattern, successStatusCode } = propResult.value;
+  const { method, uriPattern, successStatusCode, displayName } = propResult.value;
+  const pageLabel = `${displayName} (${page.url})`;
 
   try {
     const blocks = await fetchBlockTree(notion, page.id);
-    const { hasBody, successResponseJson } = extractResponseJson(blocks, successStatusCode);
-    const errorCases = extractErrorCases(blocks);
+    const { hasBody, successResponseJson } = extractResponseJson(blocks, successStatusCode, pageLabel);
+    const errorCases = extractErrorCases(blocks, pageLabel);
 
     return {
       ok: true,
