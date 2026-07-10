@@ -1,37 +1,43 @@
 import type { BlockWithChildren } from './blockParser';
 import { joinRichText } from './richText';
+import { buildPageContext } from './pageContext';
 
 export interface ResponseJsonResult {
   hasBody: boolean;
   successResponseJson: string;
 }
 
+const SECTION_LABEL = '응답 예시 code 블록';
+
 export function extractResponseJson(
   blocks: BlockWithChildren[],
   successStatusCode: number,
-  pageLabel = '(알 수 없는 페이지)'
+  displayName = '(알 수 없는 페이지)',
+  pageUrl = ''
 ): ResponseJsonResult {
   if (successStatusCode === 204) {
     return { hasBody: false, successResponseJson: '{}' };
   }
 
   const candidates = collectCodeBlocks(blocks)
-    .map((block) => classifyCodeBlockText(getCodeText(block)))
-    .filter((candidate): candidate is string => candidate !== null);
+    .map((block) => ({ id: block.id, text: classifyCodeBlockText(getCodeText(block)) }))
+    .filter((candidate): candidate is { id: string; text: string } => candidate.text !== null);
 
   if (candidates.length === 0) {
     return { hasBody: false, successResponseJson: '{}' };
   }
 
+  const context = buildPageContext(displayName, pageUrl, SECTION_LABEL, candidates[0].id);
+
   if (candidates.length > 1) {
-    console.warn(`⚠️  [${pageLabel}] 응답 예시 code 블록이 여러 개 발견되어 첫 번째를 사용합니다.`);
+    console.warn(`⚠️  [${context}] 응답 예시 code 블록이 여러 개 발견되어 첫 번째를 사용합니다.`);
   }
 
-  const json = candidates[0];
+  const json = candidates[0].text;
   try {
     JSON.parse(json);
   } catch {
-    console.warn(`⚠️  [${pageLabel}] 유효하지 않은 JSON입니다. 빈 객체로 대체합니다.`);
+    console.warn(`⚠️  [${context}] 유효하지 않은 JSON입니다. 빈 객체로 대체합니다.`);
     return { hasBody: false, successResponseJson: '{}' };
   }
 

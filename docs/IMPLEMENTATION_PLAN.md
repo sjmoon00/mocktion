@@ -200,7 +200,18 @@ notion-mockserver/
   - 검증: `npm run build` + `npm test`(기존 55개 테스트 무변경 통과 — 새 파라미터는 옵션이라 기존 호출부 영향 없음) + 실 DB로 `npm run dev` 재실행해 경고 줄마다 페이지 제목+URL이 붙는지 육안 확인.
   - 커밋: `fix(notion): 파싱 경고 로그에 페이지 식별 정보(제목+URL) 추가`
 
-**순서**: Unit 1 단독 (단일 논리 변경, 커밋 경계 분리 불필요).
+- [x] **Unit 2 — 파싱 경고 로그에 섹션 정보와 Notion 블록 딥링크 추가**
+  - **배경**: Unit 1로 페이지는 식별 가능해졌지만, 사용자가 "예외 상황 표의 어느 행이 문제인지까지 보고 싶다"고 요청. Notion은 페이지 URL 뒤에 `#{블록ID(대시 제거)}`를 붙이면 그 블록으로 바로 스크롤하는 딥링크(공식 "블록에 링크 복사" 기능과 동일 형식)를 지원한다.
+  - 신규 `src/notion/pageContext.ts`: `buildPageContext(displayName, pageUrl, sectionLabel, blockId?)` — `blockId`가 있으면 `${pageUrl}#${blockId 대시 제거}`, 없으면 `pageUrl`만, `pageUrl`도 없으면(테스트 기본값) 링크 없이 텍스트만 반환.
+  - `src/notion/responseJsonExtractor.ts`: 후보 code 블록 수집 시 텍스트뿐 아니라 `block.id`도 함께 보존(`{id, text}[]`)하도록 변경. `extractResponseJson(blocks, successStatusCode, displayName?, pageUrl?)`로 확장, 두 경고 모두 섹션명 "응답 예시 code 블록" + 첫 번째(사용되는) 후보의 블록ID로 딥링크 생성.
+  - `src/notion/errorCaseParser.ts`: `extractErrorCases(blocks, displayName?, pageUrl?)` → `parseErrorTable(tableBlock, displayName, pageUrl)`. 행 순회 중 `row.id`를 블록ID로 사용해 섹션명 "예외 상황 표" + 해당 행 딥링크 생성.
+  - `src/notion/propertyExtractor.ts`: `extractProperties(properties, pageUrl?)`로 확장. `extractMultiSelectFirst(prop, fieldName, displayName, pageUrl)`에서 섹션명은 실제 프로퍼티 이름("HTTP Method"/"응답코드")을 그대로 사용 — 프로퍼티는 블록ID가 없어 페이지 링크까지만 제공.
+  - `src/notion/pageParser.ts`: 기존에 미리 조합해두던 `pageLabel` 문자열 생성 로직을 제거하고, `displayName`과 `page.url`을 그대로 하위 호출부에 전달.
+  - 신규 단위 테스트 `tests/pageContext.test.ts`: blockId 있음/없음, pageUrl 있음/없음 조합 케이스.
+  - 검증: `npm run build` + `npm test`(신규 테스트 포함, 기존 케이스 시그니처 무변경) + 실 DB로 재실행해 경고에 찍힌 URL을 실제로 열어 문제의 행/code 블록으로 스크롤되는지 육안 확인.
+  - 커밋: `feat(notion): 파싱 경고 로그에 섹션 정보와 Notion 블록 딥링크 추가`
+
+**순서**: Unit 1 → Unit 2 (Unit 2는 Unit 1이 도입한 `pageLabel` 파라미터를 대체하므로 순서 의존).
 
 ---
 

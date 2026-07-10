@@ -20,18 +20,17 @@ export interface ParseAllResult {
 }
 
 export async function parsePage(notion: Client, page: PageObjectResponse): Promise<PageParseResult> {
-  const propResult = extractProperties(page.properties);
+  const propResult = extractProperties(page.properties, page.url);
   if (!propResult.ok) {
     return { ok: false, displayName: propResult.displayName, reason: propResult.reason };
   }
 
   const { method, uriPattern, successStatusCode, displayName } = propResult.value;
-  const pageLabel = `${displayName} (${page.url})`;
 
   try {
     const blocks = await fetchBlockTree(notion, page.id);
-    const { hasBody, successResponseJson } = extractResponseJson(blocks, successStatusCode, pageLabel);
-    const errorCases = extractErrorCases(blocks, pageLabel);
+    const { hasBody, successResponseJson } = extractResponseJson(blocks, successStatusCode, displayName, page.url);
+    const errorCases = extractErrorCases(blocks, displayName, page.url);
 
     return {
       ok: true,
