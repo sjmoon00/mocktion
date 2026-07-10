@@ -39,7 +39,7 @@ async function main(): Promise<void> {
   }
 
   console.log(`\n[notion-mock] 파싱 중...`);
-  const { specs, propertySkipped } = await parseAllPages(notion, pages);
+  const { specs, propertySkipped } = await parseAllPages(notion, pages, dataSourceId);
   for (const s of propertySkipped) {
     console.warn(`  ⚠️  스킵됨: ${s.displayName} — ${s.reason}`);
   }

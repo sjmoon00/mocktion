@@ -238,7 +238,7 @@ notion-mockserver/
   - 신규 `tests/specCache.test.ts`: 히트/미스(다른 lastEditedTime)/`schemaVersion` 불일치/`dataSourceId` 불일치/손상된 JSON 파일 폴백 케이스.
   - 커밋: `feat(notion): 페이지별 파싱 결과 로컬 캐시 저장소(specCache) 추가`
 
-- [ ] **Unit 2 — pageParser.ts에 캐시 조회/반환 연결**
+- [x] **Unit 2 — pageParser.ts에 캐시 조회/반환 연결**
   - `parsePage(notion, page, oldCache?)`: 프로퍼티 추출은 항상 새로 실행, `getCached(oldCache, page.id, page.last_edited_time)` 히트 시 `fetchBlockTree` 자체를 건너뛴다.
   - `PageParseResult`의 성공 케이스에 `cacheEntry: { pageId, lastEditedTime, result: CachedBlockResult }`를 포함(호출자가 새 캐시를 조립할 수 있도록 — `parsePage` 자체는 파일 I/O를 하지 않고 순수하게 유지).
   - `parseAllPages(notion, pages, oldCache?)`: 각 페이지의 `cacheEntry`를 모아 새 `SpecCache` 반환(파일 저장은 안 함), 캐시 적중/미스 개수(`cacheHits`, `cacheMisses`)도 `ParseAllResult`에 포함.
