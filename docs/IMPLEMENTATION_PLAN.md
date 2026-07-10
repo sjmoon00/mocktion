@@ -245,7 +245,7 @@ notion-mockserver/
   - 기존 `pageParser.ts`는 전용 단위 테스트가 없는 오케스트레이터(E2E 검증 대상)라 시그니처 변경에 따른 기존 테스트 영향 없음.
   - 커밋: `feat(notion): pageParser가 캐시 히트 시 블록 조회를 건너뛰도록 변경`
 
-- [ ] **Unit 3 — CLI 통합(`--no-cache` 플래그 + 캐시 로드/저장)**
+- [x] **Unit 3 — CLI 통합(`--no-cache` 플래그 + 캐시 로드/저장)**
   - `index.ts`: Commander에 `--no-cache` boolean 옵션 추가(기본 캐시 사용).
   - 캐시 파일 경로 상수 `.notion-mock-cache.json`(프로젝트 CWD 기준).
   - `--no-cache` 미지정 시: `loadCache` → `parseAllPages(notion, pages, oldCache)` → 결과를 `saveCache`로 저장. `--no-cache` 지정 시: 로드/저장 모두 생략.
