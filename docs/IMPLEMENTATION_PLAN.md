@@ -160,30 +160,31 @@ notion-mockserver/
 
 **구현 단위 (커밋 경계):**
 
-- [ ] **Unit 1 — 429 재시도 최대 횟수 설정**
+- [x] **Unit 1 — 429 재시도 최대 횟수 설정**
   - `src/notion/notionClient.ts`: `new Client({ auth: token, retry: { maxRetries: 3 } })`로 수정.
   - `docs/DECISIONS.md`에 D-015 추가 (SDK 내장 재시도를 재구현하지 않고 옵션만 조정한 근거).
-  - 검증: 실제 429 유발은 현실적으로 어려워 별도 통합 테스트는 만들지 않고, `npm test` 회귀만 확인 + DECISIONS.md에 근거 기록으로 대체.
-  - 커밋(안): `feat(notion): 429 재시도 최대 횟수를 3회로 명시 설정`
+  - 검증: 실제 429 유발은 현실적으로 어려워 별도 통합 테스트는 만들지 않고, `npm test`(55개) 회귀 없음 확인 + DECISIONS.md에 근거 기록으로 대체.
+  - 커밋: `feat(notion): 429 재시도 최대 횟수를 3회로 명시 설정`
 
-- [ ] **Unit 2 — 에러 메시지 검증 + 테스트 보강**
-  - `tests/databaseFetcher.test.ts`에 `resolveDataSourceId` 테스트 추가: 데이터소스 0개(에러) / 1개(정상 반환) / 2개 이상(멀티 데이터소스 에러, 개수 포함 메시지 확인).
-  - 실행 검증(코드 변경 없음, 확인만): `NOTION_TOKEN` 없이 실행 → 안내 메시지 확인 / `--db not-a-notion-url` 실행 → 명확한 에러 확인. 멀티 데이터소스 실 DB는 없으므로 이 경로는 유닛 테스트로만 고정하고 실 DB 검증은 생략.
-  - 커밋(안): `test(notion): 데이터소스 조회 실패 케이스(0개/멀티) 유닛 테스트 추가`
+- [x] **Unit 2 — 에러 메시지 검증 + 테스트 보강**
+  - `tests/databaseFetcher.test.ts`에 `resolveDataSourceId` 테스트 4건 추가: 데이터소스 0개(에러) / 1개(정상 반환) / 2개 이상(멀티 데이터소스 에러, 개수 포함 메시지 확인) / 비-database 응답(에러).
+  - 실행 검증(코드 변경 없음, 확인만): `NOTION_TOKEN` 없이 실행 → 안내 메시지 확인 완료 / `--db https://example.com/not-a-notion-url` 실행 → `Notion DB URL에서 database_id를 추출할 수 없습니다` 에러 확인 완료. 멀티 데이터소스 실 DB는 없으므로 이 경로는 유닛 테스트로만 고정하고 실 DB 검증은 생략.
+  - 커밋: `test(notion): 데이터소스 조회 실패 케이스(0개/멀티) 유닛 테스트 추가`
 
 - [x] **Unit 3 — `package.json` `bin` 필드 → 이번 Phase 3에서는 스킵하기로 확정 (사용자 결정, [T-009](TRADEOFFS.md) 참고)**
   - 아직 npm publish 계획이 없어 지금 추가해도 실익이 없다고 판단, 필요해지면 그때 추가하기로 함. 커밋 없음(변경 없음).
 
-- [ ] **Unit 4 — 빌드/E2E 검증 게이트 (별도 커밋 없음, 문제 발견 시에만 수정 커밋)**
-  - `npm run build` 에러 없이 통과 확인.
-  - `node dist/index.js --db {실DB} --status 완료`로 컴파일된 결과물 기동 재확인.
+- [x] **Unit 4 — 빌드/E2E 검증 게이트**
+  - `npm run build` (dist 삭제 후 클린 빌드) 에러 없이 통과 확인.
+  - `node dist/index.js --db {실DB} --status 완료`로 컴파일된 결과물 기동 재확인 — 실 DB 120페이지 중 상태 필터 적용 후 108개 처리·107개 엔드포인트 등록(실 DB가 팀에 의해 계속 갱신되는 라이브 문서라 Phase 2 검증 시점의 119개와는 수치가 다름 — 코드 문제 아님).
+  - `curl`로 미등록 경로 404(등록 엔드포인트 힌트 포함), `Access-Control-Allow-Origin: *` CORS 헤더, 실제 등록된 GET 엔드포인트의 JSON 응답 모두 정상 확인.
+  - 문제 미발견으로 별도 수정 커밋 없음.
 
-- [ ] **Unit 5 — README.md 작성**
+- [x] **Unit 5 — README.md 작성**
   - 신규 파일. 목차: 소개 → 설치 → Notion DB 템플릿 요구사항(실 데이터 기준 프로퍼티 타입 명시) → 토큰 발급(PAT 권장 근거) → 사용법(CLI 옵션) → 실행 예시 → 알려진 한계(TRADEOFFS.md 요약+링크) → 관련 문서 링크.
-  - Unit 3의 bin 필드 결정이 사용법 섹션에 반영되어야 하므로 마지막 단위로 진행.
-  - 커밋(안): `docs: README 작성 (설치·사용법·알려진 한계)`
+  - 커밋: `docs: README 작성 (설치·사용법·알려진 한계)`
 
-**순서**: Unit 1 → Unit 2 → Unit 3(사용자 확인 후) → Unit 4(게이트) → Unit 5. 각 단위 완료·검증 즉시 그 자리에서 커밋(CLAUDE.md 원칙). Phase 3 전체 완료 시 `docs/AI_COLLABORATION_LOG.md`에 세션 기록 추가.
+**순서**: Unit 1 → Unit 2 → Unit 3(사용자 확인 후) → Unit 4(게이트) → Unit 5. 각 단위 완료·검증 즉시 그 자리에서 커밋(CLAUDE.md 원칙). Phase 3 전체 완료 — `docs/AI_COLLABORATION_LOG.md`에 세션 기록 추가함.
 
 ---
 
