@@ -2,11 +2,17 @@ import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import type { EndpointSpec } from '../types/domain';
 
-export function createMockServer(specs: EndpointSpec[]): Express {
+export interface CreateMockServerResult {
+  app: Express;
+  registered: EndpointSpec[];
+}
+
+export function createMockServer(specs: EndpointSpec[]): CreateMockServerResult {
   const app = express();
   app.use(cors());
 
   const seen = new Set<string>();
+  const registered: EndpointSpec[] = [];
 
   for (const spec of specs) {
     const expressPath = spec.uriPattern.replace(/\{([\w-]+)\}/g, ':$1');
@@ -30,11 +36,11 @@ export function createMockServer(specs: EndpointSpec[]): Express {
 
     try {
       switch (spec.method.toUpperCase()) {
-        case 'GET': app.get(expressPath, handler); break;
-        case 'POST': app.post(expressPath, handler); break;
-        case 'PUT': app.put(expressPath, handler); break;
-        case 'PATCH': app.patch(expressPath, handler); break;
-        case 'DELETE': app.delete(expressPath, handler); break;
+        case 'GET': app.get(expressPath, handler); registered.push(spec); break;
+        case 'POST': app.post(expressPath, handler); registered.push(spec); break;
+        case 'PUT': app.put(expressPath, handler); registered.push(spec); break;
+        case 'PATCH': app.patch(expressPath, handler); registered.push(spec); break;
+        case 'DELETE': app.delete(expressPath, handler); registered.push(spec); break;
         default:
           console.warn(`⚠️  지원하지 않는 HTTP 메서드 스킵: ${spec.method} ${spec.uriPattern}`);
       }
@@ -46,9 +52,9 @@ export function createMockServer(specs: EndpointSpec[]): Express {
   app.use((_req: Request, res: Response) => {
     res.status(404).json({
       error: 'Not Found',
-      registeredEndpoints: specs.map((s) => `${s.method} ${s.uriPattern}`),
+      registeredEndpoints: registered.map((s) => `${s.method} ${s.uriPattern}`),
     });
   });
 
-  return app;
+  return { app, registered };
 }
