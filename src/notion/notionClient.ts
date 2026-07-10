@@ -9,5 +9,5 @@ export function createNotionClient(): Client {
     process.exit(1);
   }
 
-  return new Client({ auth: token });
+  return new Client({ auth: token, retry: { maxRetries: 3 } });
 }

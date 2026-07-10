@@ -128,3 +128,12 @@
 - **결정**: 실사용 영향이 0건으로 확인됐음에도, `responseJsonExtractor.ts`와 동일하게 `__children`까지 재귀하는 `flattenBlocks`로 변경.
 - **검토한 대안**: 실 데이터에 영향이 없으므로 수정하지 않고 "알려진 비대칭, 실사용 영향 없음"으로만 기록.
 - **근거**: 이 프로젝트는 Phase 0에서 스펙 문서의 프로퍼티 타입 가정 3건이 실 데이터와 달랐던 전례가 있어(`docs/IMPLEMENTATION_PLAN.md` Phase 0 검증 결과 참고), 페이지 구조 가정에 보수적으로 접근하는 편이 안전하다고 판단했다. 재귀 로직 자체가 이미 `responseJsonExtractor.ts`에 구현돼 있어 추가 비용도 거의 없었다.
+
+---
+
+## D-015: 429 재시도는 커스텀 로직을 작성하지 않고 `@notionhq/client`의 내장 재시도 옵션만 조정
+
+- **배경**: 계획서(Phase 3)는 "Notion API rate limit(429) 시 `Retry-After` 헤더만큼 대기 후 재시도(최대 3회)"를 자체 구현해야 할 항목으로 전제했다. Phase 3 착수 전 `node_modules/@notionhq/client`(v5.23.0)의 `Client.js` 소스를 직접 확인한 결과, `executeWithRetry`/`canRetry`/`calculateRetryDelay`/`parseRetryAfterHeader`가 이미 429(`rate_limited`)·529(`service_overload`)에 대해 `Retry-After` 헤더를 우선 존중하고 없으면 exponential backoff(jitter 포함)로 재시도하는 로직을 `Client` 레벨에서 모든 요청에 공통 적용하고 있었다. 기본값은 `maxRetries: 2`.
+- **결정**: 커스텀 재시도 로직을 작성하지 않고, `notionClient.ts`의 `new Client({...})` 생성 시 `retry: { maxRetries: 3 }`만 명시적으로 설정해 계획서가 요구한 "최대 3회"에 맞춘다.
+- **검토한 대안**: 계획서 원안대로 `dataSources.query`/`blocks.children.list`/`databases.retrieve` 호출부를 감싸는 자체 재시도 래퍼 구현.
+- **근거**: [D-009](#d-009-db-url--database_id-추출은-자체-정규식-대신-sdk의-extractdatabaseid-헬퍼를-래핑)와 동일한 논리 — 이미 검증된 공식 구현(헤더 파싱, jitter를 포함한 백오프 계산, idempotent 메서드 판별까지 포함)이 존재하는데 동일한 로직을 재작성하는 것은 불필요한 중복이자 오히려 버그를 더할 위험만 있다. 옵션 값만 조정하는 편이 가장 단순하고 신뢰도가 높다. 실제 429를 인위적으로 유발하기 어려워 별도 통합 테스트는 만들지 않았다 — SDK 자체가 이미 유닛/통합 테스트를 거친 공식 라이브러리라는 점으로 갈음.
