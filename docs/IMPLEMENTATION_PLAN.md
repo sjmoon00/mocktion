@@ -148,11 +148,42 @@ notion-mockserver/
 
 ### Phase 3: 마무리
 
-- [ ] 429 재시도 (Retry-After 존중, 최대 3회)
-- [ ] 잘못된 URL / 멀티 데이터소스 / 토큰 누락 각각 명확한 에러 메시지
-- [ ] `npm run build` 정상 동작 확인
-- [ ] README 작성 (설치, 토큰 발급 PAT 권장, 사용법, 알려진 한계는 [TRADEOFFS.md](TRADEOFFS.md) 요약해서 명시)
-- [ ] (선택) `package.json`에 `bin` 필드 추가
+**Phase 3 착수 전 실제 코드 대조 결과 — 계획서 항목 중 일부는 이미 구현되어 있었음:**
+
+1. **429 재시도는 `@notionhq/client`(v5.23.0)가 이미 내장 지원한다.** `node_modules/@notionhq/client/build/src/Client.js`의 `executeWithRetry`/`canRetry`/`calculateRetryDelay`/`parseRetryAfterHeader`가 429(`rate_limited`)·529(`service_overload`)에 대해 `Retry-After` 헤더를 우선 존중하고, 없으면 exponential backoff로 재시도한다(기본 `maxRetries: 2`). `Client` 생성 시 `retry` 옵션으로 조정 가능. 계획서가 요구하는 "최대 3회"와 기본값(2회)이 다르므로, 커스텀 재시도 로직을 새로 작성하는 대신 `retry: { maxRetries: 3 }`만 명시적으로 설정한다 — D-009("이미 검증된 공식 구현을 재작성하지 않는다")와 동일한 논리.
+2. **"잘못된 URL / 멀티 데이터소스 / 토큰 누락" 에러 메시지는 Phase 0~1에서 이미 구현 완료됨.** 코드 대조 확인:
+   - 토큰 누락 → `src/notion/notionClient.ts:6-10`, 이미 2줄 안내 후 `process.exit(1)`.
+   - 잘못된 URL → `src/notion/databaseFetcher.ts:15-21` `parseDatabaseId`, 이미 명확한 에러(D-009), `tests/databaseFetcher.test.ts:47-51`로 고정됨.
+   - 멀티 데이터소스 → `src/notion/databaseFetcher.ts:23-43` `resolveDataSourceId`, 이미 데이터소스 개수 포함한 명확한 에러를 던짐. **단, 이 함수는 현재 유닛 테스트가 없다** (0개/1개/2개+ 케이스 미검증).
+   → 새 에러 처리 코드 작성은 불필요. 남은 일은 (a) `resolveDataSourceId` 테스트 보강, (b) 실제 CLI 실행으로 세 시나리오의 콘솔 출력이 실사용자 관점에서 충분히 명확한지 확인.
+3. `npm run build`, README는 실제로 미착수 상태 그대로 — 아래 단위대로 진행.
+
+**구현 단위 (커밋 경계):**
+
+- [ ] **Unit 1 — 429 재시도 최대 횟수 설정**
+  - `src/notion/notionClient.ts`: `new Client({ auth: token, retry: { maxRetries: 3 } })`로 수정.
+  - `docs/DECISIONS.md`에 D-015 추가 (SDK 내장 재시도를 재구현하지 않고 옵션만 조정한 근거).
+  - 검증: 실제 429 유발은 현실적으로 어려워 별도 통합 테스트는 만들지 않고, `npm test` 회귀만 확인 + DECISIONS.md에 근거 기록으로 대체.
+  - 커밋(안): `feat(notion): 429 재시도 최대 횟수를 3회로 명시 설정`
+
+- [ ] **Unit 2 — 에러 메시지 검증 + 테스트 보강**
+  - `tests/databaseFetcher.test.ts`에 `resolveDataSourceId` 테스트 추가: 데이터소스 0개(에러) / 1개(정상 반환) / 2개 이상(멀티 데이터소스 에러, 개수 포함 메시지 확인).
+  - 실행 검증(코드 변경 없음, 확인만): `NOTION_TOKEN` 없이 실행 → 안내 메시지 확인 / `--db not-a-notion-url` 실행 → 명확한 에러 확인. 멀티 데이터소스 실 DB는 없으므로 이 경로는 유닛 테스트로만 고정하고 실 DB 검증은 생략.
+  - 커밋(안): `test(notion): 데이터소스 조회 실패 케이스(0개/멀티) 유닛 테스트 추가`
+
+- [x] **Unit 3 — `package.json` `bin` 필드 → 이번 Phase 3에서는 스킵하기로 확정 (사용자 결정, [T-009](TRADEOFFS.md) 참고)**
+  - 아직 npm publish 계획이 없어 지금 추가해도 실익이 없다고 판단, 필요해지면 그때 추가하기로 함. 커밋 없음(변경 없음).
+
+- [ ] **Unit 4 — 빌드/E2E 검증 게이트 (별도 커밋 없음, 문제 발견 시에만 수정 커밋)**
+  - `npm run build` 에러 없이 통과 확인.
+  - `node dist/index.js --db {실DB} --status 완료`로 컴파일된 결과물 기동 재확인.
+
+- [ ] **Unit 5 — README.md 작성**
+  - 신규 파일. 목차: 소개 → 설치 → Notion DB 템플릿 요구사항(실 데이터 기준 프로퍼티 타입 명시) → 토큰 발급(PAT 권장 근거) → 사용법(CLI 옵션) → 실행 예시 → 알려진 한계(TRADEOFFS.md 요약+링크) → 관련 문서 링크.
+  - Unit 3의 bin 필드 결정이 사용법 섹션에 반영되어야 하므로 마지막 단위로 진행.
+  - 커밋(안): `docs: README 작성 (설치·사용법·알려진 한계)`
+
+**순서**: Unit 1 → Unit 2 → Unit 3(사용자 확인 후) → Unit 4(게이트) → Unit 5. 각 단위 완료·검증 즉시 그 자리에서 커밋(CLAUDE.md 원칙). Phase 3 전체 완료 시 `docs/AI_COLLABORATION_LOG.md`에 세션 기록 추가.
 
 ---
 
