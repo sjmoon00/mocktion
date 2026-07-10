@@ -215,6 +215,55 @@ notion-mockserver/
 
 ---
 
+### Phase 5: 시작 속도 개선 (로컬 캐시)
+
+**배경**: 실 DB(120페이지) 기준 매 실행마다 페이지당 블록 트리를 재귀로 새로 조회하느라 시작에 2~3분이 걸림. 실측 결과 병목은 페이지 목록 조회(전체 0.6초)가 아니라 페이지당 `fetchBlockTree`(페이지당 0.9~2.2초)임을 확인함. 또한 실 DB 라이브 테스트(표 행 블록에 공백 추가 후 원복)로, 페이지 내 블록을 수정하면 상위 페이지의 `last_edited_time`도 함께 갱신됨을 확인함 — 이 전제 위에서 "페이지 목록만 먼저 조회해 `last_edited_time`이 바뀐 페이지만 재파싱"하는 캐싱이 안전하다고 판단.
+
+**설계 요점**:
+- 캐시는 페이지별 **블록 파싱 결과만** 저장한다(`hasBody`/`successResponseJson`/`errorCases`). `method`/`uriPattern`/`successStatusCode`(프로퍼티에서 추출, 네트워크 호출 없이 이미 조회된 `page.properties`로 즉시 계산 가능)는 캐시 여부와 무관하게 매번 새로 계산 — 캐시 히트 여부와 무관하게 항상 최신값을 쓴다.
+- `--status` 필터는 캐싱과 무관 — `databaseFetcher.ts`가 이미 전량 조회 후 클라이언트 사이드로 필터링하므로(D-010), 캐시는 필터와 상관없이 페이지 단위로만 저장하면 된다.
+- 캐시 파일에 `schemaVersion` 필드를 둬서, 파서 로직 자체가 바뀌었을 때(버그 수정 등) 페이지가 안 바뀌어도 캐시를 강제로 무효화할 수 있게 한다.
+- DB URL(`dataSourceId`)이 바뀌면 캐시 전체를 무효화(별도 멀티-DB 캐시는 만들지 않음 — 단순함 우선).
+- 캐시 파일 손상/스키마 불일치 시 조용히 빈 캐시로 폴백(D-013과 동일한 "안전한 기본값" 정책).
+- 캐시 파일에 없는(=이번 실행 결과에 없는) 페이지는 자연히 드롭됨 — 별도 삭제 로직 불필요.
+- `--no-cache` 플래그로 이번 실행만 캐시를 읽지도 쓰지도 않는 완전 우회 옵션 제공.
+
+**구현 단위 (커밋 경계):**
+
+- [x] **Unit 1 — 캐시 저장소 모듈(`specCache.ts`) + 단위 테스트**
+  - 신규 `src/notion/specCache.ts`: `SpecCache { schemaVersion, dataSourceId, entries: Record<pageId, { lastEditedTime, result: CachedBlockResult }> }`, `CachedBlockResult { hasBody, successResponseJson, errorCases }` 타입.
+  - `loadCache(path, dataSourceId)`: 파일 읽기 → JSON.parse → `schemaVersion`/`dataSourceId` 불일치 또는 파싱 실패 시 빈 캐시(`{schemaVersion: CURRENT, dataSourceId, entries: {}}`) 반환.
+  - `saveCache(path, cache)`: JSON.stringify 후 파일 쓰기.
+  - `getCached(cache, pageId, lastEditedTime)`: `entries[pageId]`가 있고 `lastEditedTime`이 일치하면 `result` 반환, 아니면 `undefined`.
+  - 신규 `tests/specCache.test.ts`: 히트/미스(다른 lastEditedTime)/`schemaVersion` 불일치/`dataSourceId` 불일치/손상된 JSON 파일 폴백 케이스.
+  - 커밋: `feat(notion): 페이지별 파싱 결과 로컬 캐시 저장소(specCache) 추가`
+
+- [ ] **Unit 2 — pageParser.ts에 캐시 조회/반환 연결**
+  - `parsePage(notion, page, oldCache?)`: 프로퍼티 추출은 항상 새로 실행, `getCached(oldCache, page.id, page.last_edited_time)` 히트 시 `fetchBlockTree` 자체를 건너뛴다.
+  - `PageParseResult`의 성공 케이스에 `cacheEntry: { pageId, lastEditedTime, result: CachedBlockResult }`를 포함(호출자가 새 캐시를 조립할 수 있도록 — `parsePage` 자체는 파일 I/O를 하지 않고 순수하게 유지).
+  - `parseAllPages(notion, pages, oldCache?)`: 각 페이지의 `cacheEntry`를 모아 새 `SpecCache` 반환(파일 저장은 안 함), 캐시 적중/미스 개수(`cacheHits`, `cacheMisses`)도 `ParseAllResult`에 포함.
+  - 기존 `pageParser.ts`는 전용 단위 테스트가 없는 오케스트레이터(E2E 검증 대상)라 시그니처 변경에 따른 기존 테스트 영향 없음.
+  - 커밋: `feat(notion): pageParser가 캐시 히트 시 블록 조회를 건너뛰도록 변경`
+
+- [ ] **Unit 3 — CLI 통합(`--no-cache` 플래그 + 캐시 로드/저장)**
+  - `index.ts`: Commander에 `--no-cache` boolean 옵션 추가(기본 캐시 사용).
+  - 캐시 파일 경로 상수 `.notion-mock-cache.json`(프로젝트 CWD 기준).
+  - `--no-cache` 미지정 시: `loadCache` → `parseAllPages(notion, pages, oldCache)` → 결과를 `saveCache`로 저장. `--no-cache` 지정 시: 로드/저장 모두 생략.
+  - 콘솔 출력에 `캐시 적중 N개, 새로 파싱 M개` 요약 추가.
+  - `.gitignore`에 `.notion-mock-cache.json` 추가.
+  - 커밋: `feat: --no-cache 플래그와 캐시 로드/저장을 CLI에 연결`
+
+- [ ] **Unit 4 — 검증**
+  - `npm run build` + `npm test`.
+  - 실 DB로 연속 실행 비교: 1회차(캐시 없음, 전량 파싱) vs 2회차(캐시 있음, 무변경 시) 소요 시간 실측.
+  - 페이지 1개를 실제로 살짝 편집한 뒤 3회차 실행 — 그 페이지만 재파싱되고 나머지는 캐시 히트되는지 콘솔 로그(`캐시 적중 N개, 새로 파싱 M개`)로 확인.
+  - `--no-cache`로 실행해 캐시 우회가 실제로 동작하는지 확인.
+  - 문제 발견 시에만 별도 수정 커밋(Phase 3 Unit 4와 동일한 패턴).
+
+**순서**: Unit 1 → Unit 2 → Unit 3 → Unit 4 (각 유닛이 앞 유닛의 타입/함수에 의존).
+
+---
+
 ## 검증 방법
 
 - **단위**: `npm test` — 실 Notion 응답 fixture로 파서 회귀 검증
