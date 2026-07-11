@@ -240,15 +240,15 @@ notion-mockserver/
 
 - [x] **Unit 2 — pageParser.ts에 캐시 조회/반환 연결**
   - `parsePage(notion, page, oldCache?)`: 프로퍼티 추출은 항상 새로 실행, `getCached(oldCache, page.id, page.last_edited_time)` 히트 시 `fetchBlockTree` 자체를 건너뛴다.
-  - `PageParseResult`의 성공 케이스에 `cacheEntry: { pageId, lastEditedTime, result: CachedBlockResult }`를 포함(호출자가 새 캐시를 조립할 수 있도록 — `parsePage` 자체는 파일 I/O를 하지 않고 순수하게 유지).
-  - `parseAllPages(notion, pages, oldCache?)`: 각 페이지의 `cacheEntry`를 모아 새 `SpecCache` 반환(파일 저장은 안 함), 캐시 적중/미스 개수(`cacheHits`, `cacheMisses`)도 `ParseAllResult`에 포함.
+  - `PageParseResult`의 성공 케이스에 `cacheHit: boolean`을 포함(`parsePage` 자체는 파일 I/O를 하지 않고 순수하게 유지). ~~`cacheEntry` 필드~~는 Phase 6 Unit 4에서 `spec`과의 데이터 중복이라 제거됨 — `parseAllPages`가 `page.id`/`page.last_edited_time`/`result.spec`의 블록 관련 필드로 캐시 항목을 직접 조립.
+  - `parseAllPages(notion, pages, dataSourceId, oldCache?)`: (최초 작성 시 `dataSourceId` 인자가 계획 문서에서 누락됐었음 — Phase 6 Unit 6에서 정정) 각 페이지 결과로 새 `SpecCache`를 조립해 반환(파일 저장은 안 함), 캐시 적중/미스 개수(`cacheHits`, `cacheMisses`)도 `ParseAllResult`에 포함.
   - 기존 `pageParser.ts`는 전용 단위 테스트가 없는 오케스트레이터(E2E 검증 대상)라 시그니처 변경에 따른 기존 테스트 영향 없음.
   - 커밋: `feat(notion): pageParser가 캐시 히트 시 블록 조회를 건너뛰도록 변경`
 
 - [x] **Unit 3 — CLI 통합(`--no-cache` 플래그 + 캐시 로드/저장)**
   - `index.ts`: Commander에 `--no-cache` boolean 옵션 추가(기본 캐시 사용).
   - 캐시 파일 경로 상수 `.notion-mock-cache.json`(프로젝트 CWD 기준).
-  - `--no-cache` 미지정 시: `loadCache` → `parseAllPages(notion, pages, oldCache)` → 결과를 `saveCache`로 저장. `--no-cache` 지정 시: 로드/저장 모두 생략.
+  - `--no-cache` 미지정 시: `loadCache` → `parseAllPages(notion, pages, dataSourceId, oldCache)` → 결과를 `saveCache`로 저장. `--no-cache` 지정 시: 로드/저장 모두 생략.
   - 콘솔 출력에 `캐시 적중 N개, 새로 파싱 M개` 요약 추가.
   - `.gitignore`에 `.notion-mock-cache.json` 추가.
   - 커밋: `feat: --no-cache 플래그와 캐시 로드/저장을 CLI에 연결`
@@ -297,7 +297,7 @@ notion-mockserver/
   - `src/notion/specCache.ts`의 `saveCache`: 임시 파일(`${filePath}.tmp`)에 먼저 쓴 뒤 `fs.renameSync`로 교체하는 방식으로 변경.
   - 커밋: `fix(notion): 캐시 파일을 원자적으로 저장(임시 파일 + rename)`
 
-- [ ] **Unit 6 — Finding 7(Low) + Finding 4(Medium, 미검증 전제) 대응: 문서 동기화**
+- [x] **Unit 6 — Finding 7(Low) + Finding 4(Medium, 미검증 전제) 대응: 문서 동기화**
   - `docs/IMPLEMENTATION_PLAN.md`: Phase 5 Unit 2 설명의 `parseAllPages` 시그니처를 실제 코드(`dataSourceId` 인자 포함, Unit 4 반영 후 최종 형태)에 맞춰 정정.
   - `docs/DECISIONS.md`: D-016(캐시 유효성 판단 전략 — `schemaVersion`/`dataSourceId`/entry shape 검증 조합) 추가.
   - `docs/DECISIONS.md`: D-017(파싱 경고를 캐시에 저장해 매 실행 재출력하는 방식, Unit 2 근거) 추가.
