@@ -7,6 +7,7 @@ export interface CachedBlockResult {
   hasBody: boolean;
   successResponseJson: string;
   errorCases: ErrorCase[];
+  warnings: string[];
 }
 
 export interface CacheEntry {
@@ -51,7 +52,12 @@ export function getCached(cache: SpecCache, pageId: string, lastEditedTime: stri
   if (!entry || entry.lastEditedTime !== lastEditedTime) return undefined;
 
   const r = entry.result;
-  if (typeof r?.hasBody !== 'boolean' || typeof r?.successResponseJson !== 'string' || !Array.isArray(r?.errorCases)) {
+  if (
+    typeof r?.hasBody !== 'boolean' ||
+    typeof r?.successResponseJson !== 'string' ||
+    !Array.isArray(r?.errorCases) ||
+    !Array.isArray(r?.warnings)
+  ) {
     return undefined;
   }
 

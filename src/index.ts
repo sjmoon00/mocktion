@@ -57,6 +57,11 @@ async function main(): Promise<void> {
   if (opts.cache) {
     saveCache(CACHE_PATH, cache);
   }
+  for (const spec of specs) {
+    for (const warning of spec.warnings) {
+      console.warn(warning);
+    }
+  }
   for (const s of propertySkipped) {
     console.warn(`  ⚠️  스킵됨: ${s.displayName} — ${s.reason}`);
   }

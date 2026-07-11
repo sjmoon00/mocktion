@@ -21,7 +21,7 @@ describe('loadCache / saveCache', () => {
     const cache = createEmptyCache('ds-1');
     cache.entries['page-1'] = {
       lastEditedTime: '2026-01-01T00:00:00.000Z',
-      result: { hasBody: true, successResponseJson: '{}', errorCases: [] },
+      result: { hasBody: true, successResponseJson: '{}', errorCases: [], warnings: [] },
     };
     saveCache(tmpPath, cache);
 
@@ -50,7 +50,7 @@ describe('loadCache / saveCache', () => {
 describe('getCached', () => {
   it('lastEditedTime이 일치하면 결과를 반환한다', () => {
     const cache = createEmptyCache('ds-1');
-    const result = { hasBody: true, successResponseJson: '{}', errorCases: [] };
+    const result = { hasBody: true, successResponseJson: '{}', errorCases: [], warnings: [] };
     cache.entries['page-1'] = { lastEditedTime: 't1', result };
 
     expect(getCached(cache, 'page-1', 't1')).toEqual(result);
@@ -60,7 +60,7 @@ describe('getCached', () => {
     const cache = createEmptyCache('ds-1');
     cache.entries['page-1'] = {
       lastEditedTime: 't1',
-      result: { hasBody: true, successResponseJson: '{}', errorCases: [] },
+      result: { hasBody: true, successResponseJson: '{}', errorCases: [], warnings: [] },
     };
 
     expect(getCached(cache, 'page-1', 't2')).toBeUndefined();

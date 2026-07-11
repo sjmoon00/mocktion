@@ -69,9 +69,14 @@ async function fetchAndParseBlocks(
   pageUrl: string
 ): Promise<CachedBlockResult> {
   const blocks = await fetchBlockTree(notion, pageId);
-  const { hasBody, successResponseJson } = extractResponseJson(blocks, successStatusCode, displayName, pageUrl);
-  const errorCases = extractErrorCases(blocks, displayName, pageUrl);
-  return { hasBody, successResponseJson, errorCases };
+  const { hasBody, successResponseJson, warnings: responseWarnings } = extractResponseJson(
+    blocks,
+    successStatusCode,
+    displayName,
+    pageUrl
+  );
+  const { errorCases, warnings: errorCaseWarnings } = extractErrorCases(blocks, displayName, pageUrl);
+  return { hasBody, successResponseJson, errorCases, warnings: [...responseWarnings, ...errorCaseWarnings] };
 }
 
 export async function parseAllPages(

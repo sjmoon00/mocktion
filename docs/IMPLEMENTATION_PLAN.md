@@ -275,7 +275,7 @@ notion-mockserver/
   - `tests/specCache.test.ts`에 "lastEditedTime은 일치하지만 result shape가 잘못된 경우 undefined 반환" 케이스 추가.
   - 커밋: `fix(notion): 캐시 항목 shape 검증 실패 시 미스로 취급해 목서버 크래시 방지`
 
-- [ ] **Unit 2 — Finding 2(Medium) 수정: 파싱 경고를 캐시에 저장해 캐시 히트에도 재출력**
+- [x] **Unit 2 — Finding 2(Medium) 수정: 파싱 경고를 캐시에 저장해 캐시 히트에도 재출력**
   - `src/notion/responseJsonExtractor.ts`: `console.warn` 직접 호출 2곳을 제거하고, 대신 발생한 경고 문구를 `warnings: string[]`로 모아 반환값에 포함.
   - `src/notion/errorCaseParser.ts`: 동일하게 `console.warn` 2곳을 `warnings: string[]`로 전환.
   - `src/notion/pageParser.ts`: `CachedBlockResult`에 `warnings: string[]` 필드 추가, `fetchAndParseBlocks`가 두 함수의 `warnings`를 합쳐 반환.
