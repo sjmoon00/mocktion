@@ -283,7 +283,7 @@ notion-mockserver/
   - `tests/responseJsonExtractor.test.ts`/`tests/errorCaseParser.test.ts`: 반환값 shape 변경(`warnings` 필드 추가)에 맞춰 기존 단정문 갱신, 경고가 실제로 `warnings` 배열에 담기는지 확인하는 케이스 추가.
   - 커밋: `fix(notion): 파싱 경고를 캐시에 저장해 캐시 히트 시에도 매번 재출력`
 
-- [ ] **Unit 3 — Finding 3(Medium) 수정: 일시적 파싱 실패 시 기존 캐시 항목 보존**
+- [x] **Unit 3 — Finding 3(Medium) 수정: 일시적 파싱 실패 시 기존 캐시 항목 보존**
   - `src/notion/pageParser.ts`의 `parseAllPages`: `result.ok`가 `false`인 페이지(속성 스킵이든 블록 파싱 실패든)라도, `oldCache`에 해당 `page.id`의 기존 항목이 있으면 `newCache`로 그대로 이월. `pages`에 없는(삭제/필터 제외된) 페이지는 애초에 루프를 안 돌므로 자연히 드롭되는 기존 동작과 충돌하지 않음.
   - 이 유닛은 `pageParser.ts`에 전용 단위 테스트가 없는 기존 관례(오케스트레이터, E2E 검증 대상)를 따름 — Unit 7에서 시나리오 재현으로 확인.
   - 커밋: `fix(notion): 페이지 파싱이 일시적으로 실패해도 기존 캐시 항목은 보존`

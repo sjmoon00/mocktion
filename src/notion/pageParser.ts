@@ -100,6 +100,10 @@ export async function parseAllPages(
       result.cacheHit ? cacheHits++ : cacheMisses++;
     } else {
       propertySkipped.push({ displayName: result.displayName, reason: result.reason });
+      const staleEntry = oldCache?.entries[page.id];
+      if (staleEntry) {
+        newCache.entries[page.id] = staleEntry;
+      }
     }
   }
 
