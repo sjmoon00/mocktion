@@ -44,7 +44,9 @@ export function loadCache(filePath: string, dataSourceId: string): SpecCache {
 }
 
 export function saveCache(filePath: string, cache: SpecCache): void {
-  fs.writeFileSync(filePath, JSON.stringify(cache), 'utf-8');
+  const tmpPath = `${filePath}.tmp`;
+  fs.writeFileSync(tmpPath, JSON.stringify(cache), 'utf-8');
+  fs.renameSync(tmpPath, filePath);
 }
 
 export function getCached(cache: SpecCache, pageId: string, lastEditedTime: string): CachedBlockResult | undefined {

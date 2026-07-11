@@ -293,7 +293,7 @@ notion-mockserver/
   - Unit 2가 `CachedBlockResult` shape를 먼저 확정하므로 Unit 2 이후에 진행.
   - 커밋: `refactor(notion): PageParseResult의 캐시 데이터 중복 보관 제거`
 
-- [ ] **Unit 5 — Finding 6(Low) 수정: 캐시 파일 원자적 쓰기**
+- [x] **Unit 5 — Finding 6(Low) 수정: 캐시 파일 원자적 쓰기**
   - `src/notion/specCache.ts`의 `saveCache`: 임시 파일(`${filePath}.tmp`)에 먼저 쓴 뒤 `fs.renameSync`로 교체하는 방식으로 변경.
   - 커밋: `fix(notion): 캐시 파일을 원자적으로 저장(임시 파일 + rename)`
 
