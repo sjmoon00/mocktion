@@ -186,6 +186,134 @@ notion-mockserver/
 
 **순서**: Unit 1 → Unit 2 → Unit 3(사용자 확인 후) → Unit 4(게이트) → Unit 5. 각 단위 완료·검증 즉시 그 자리에서 커밋(CLAUDE.md 원칙). Phase 3 전체 완료 — `docs/AI_COLLABORATION_LOG.md`에 세션 기록 추가함.
 
+### Phase 4: 실사용 피드백 대응
+
+**배경**: Phase 3 완료 후 실 DB(`--db` 실제 URL)로 직접 실행한 결과, 파싱 경고 로그(`⚠️ 응답코드에서 숫자를 찾을 수 없어...`, `⚠️ 유효하지 않은 JSON입니다...` 등)가 정확히 어느 Notion 페이지에서 발생했는지 식별할 수 없다는 문제 발견. `pageParser.ts`가 페이지 단위로 순회하며 페이지 제목(`displayName`)과 URL(`page.url`)을 이미 갖고 있음에도, 경고를 실제로 출력하는 `responseJsonExtractor.ts`/`errorCaseParser.ts`/`propertyExtractor.ts`의 함수들에는 이 정보가 전달되지 않고 있었다.
+
+**구현 단위 (커밋 경계):**
+
+- [x] **Unit 1 — 파싱 경고 로그에 페이지 식별 정보(제목+URL) 추가**
+  - `src/notion/responseJsonExtractor.ts`: `extractResponseJson(blocks, successStatusCode, pageLabel?)` 시그니처에 `pageLabel` 추가(기본값 `'(알 수 없는 페이지)'`), 두 warn에 `[${pageLabel}]` 접두사 적용.
+  - `src/notion/errorCaseParser.ts`: `extractErrorCases(blocks, pageLabel?)` → `parseErrorTable(tableBlock, pageLabel?)`까지 전달, 두 warn에 접두사 적용.
+  - `src/notion/propertyExtractor.ts`: 이미 계산된 `displayName`(15행)을 `extractMultiSelectFirst(prop, displayName)`에 전달해 warn에 접두사 적용. 외부 `extractProperties` 시그니처는 변경 없음.
+  - `src/notion/pageParser.ts`: `parsePage` 내부에서 `pageLabel = \`${displayName} (${page.url})\`` 생성 후 위 호출부에 전달.
+  - 검증: `npm run build` + `npm test`(기존 55개 테스트 무변경 통과 — 새 파라미터는 옵션이라 기존 호출부 영향 없음) + 실 DB로 `npm run dev` 재실행해 경고 줄마다 페이지 제목+URL이 붙는지 육안 확인.
+  - 커밋: `fix(notion): 파싱 경고 로그에 페이지 식별 정보(제목+URL) 추가`
+
+- [x] **Unit 2 — 파싱 경고 로그에 섹션 정보와 Notion 블록 딥링크 추가**
+  - **배경**: Unit 1로 페이지는 식별 가능해졌지만, 사용자가 "예외 상황 표의 어느 행이 문제인지까지 보고 싶다"고 요청. Notion은 페이지 URL 뒤에 `#{블록ID(대시 제거)}`를 붙이면 그 블록으로 바로 스크롤하는 딥링크(공식 "블록에 링크 복사" 기능과 동일 형식)를 지원한다.
+  - 신규 `src/notion/pageContext.ts`: `buildPageContext(displayName, pageUrl, sectionLabel, blockId?)` — `blockId`가 있으면 `${pageUrl}#${blockId 대시 제거}`, 없으면 `pageUrl`만, `pageUrl`도 없으면(테스트 기본값) 링크 없이 텍스트만 반환.
+  - `src/notion/responseJsonExtractor.ts`: 후보 code 블록 수집 시 텍스트뿐 아니라 `block.id`도 함께 보존(`{id, text}[]`)하도록 변경. `extractResponseJson(blocks, successStatusCode, displayName?, pageUrl?)`로 확장, 두 경고 모두 섹션명 "응답 예시 code 블록" + 첫 번째(사용되는) 후보의 블록ID로 딥링크 생성.
+  - `src/notion/errorCaseParser.ts`: `extractErrorCases(blocks, displayName?, pageUrl?)` → `parseErrorTable(tableBlock, displayName, pageUrl)`. 행 순회 중 `row.id`를 블록ID로 사용해 섹션명 "예외 상황 표" + 해당 행 딥링크 생성.
+  - `src/notion/propertyExtractor.ts`: `extractProperties(properties, pageUrl?)`로 확장. `extractMultiSelectFirst(prop, fieldName, displayName, pageUrl)`에서 섹션명은 실제 프로퍼티 이름("HTTP Method"/"응답코드")을 그대로 사용 — 프로퍼티는 블록ID가 없어 페이지 링크까지만 제공.
+  - `src/notion/pageParser.ts`: 기존에 미리 조합해두던 `pageLabel` 문자열 생성 로직을 제거하고, `displayName`과 `page.url`을 그대로 하위 호출부에 전달.
+  - 신규 단위 테스트 `tests/pageContext.test.ts`: blockId 있음/없음, pageUrl 있음/없음 조합 케이스.
+  - 검증: `npm run build` + `npm test`(신규 테스트 포함, 기존 케이스 시그니처 무변경) + 실 DB로 재실행해 경고에 찍힌 URL을 실제로 열어 문제의 행/code 블록으로 스크롤되는지 육안 확인.
+  - 커밋: `feat(notion): 파싱 경고 로그에 섹션 정보와 Notion 블록 딥링크 추가`
+
+**순서**: Unit 1 → Unit 2 (Unit 2는 Unit 1이 도입한 `pageLabel` 파라미터를 대체하므로 순서 의존).
+
+---
+
+### Phase 5: 시작 속도 개선 (로컬 캐시)
+
+**배경**: 실 DB(120페이지) 기준 매 실행마다 페이지당 블록 트리를 재귀로 새로 조회하느라 시작에 2~3분이 걸림. 실측 결과 병목은 페이지 목록 조회(전체 0.6초)가 아니라 페이지당 `fetchBlockTree`(페이지당 0.9~2.2초)임을 확인함. 또한 실 DB 라이브 테스트(표 행 블록에 공백 추가 후 원복)로, 페이지 내 블록을 수정하면 상위 페이지의 `last_edited_time`도 함께 갱신됨을 확인함 — 이 전제 위에서 "페이지 목록만 먼저 조회해 `last_edited_time`이 바뀐 페이지만 재파싱"하는 캐싱이 안전하다고 판단.
+
+**설계 요점**:
+- 캐시는 페이지별 **블록 파싱 결과만** 저장한다(`hasBody`/`successResponseJson`/`errorCases`). `method`/`uriPattern`/`successStatusCode`(프로퍼티에서 추출, 네트워크 호출 없이 이미 조회된 `page.properties`로 즉시 계산 가능)는 캐시 여부와 무관하게 매번 새로 계산 — 캐시 히트 여부와 무관하게 항상 최신값을 쓴다.
+- `--status` 필터는 캐싱과 무관 — `databaseFetcher.ts`가 이미 전량 조회 후 클라이언트 사이드로 필터링하므로(D-010), 캐시는 필터와 상관없이 페이지 단위로만 저장하면 된다.
+- 캐시 파일에 `schemaVersion` 필드를 둬서, 파서 로직 자체가 바뀌었을 때(버그 수정 등) 페이지가 안 바뀌어도 캐시를 강제로 무효화할 수 있게 한다.
+- DB URL(`dataSourceId`)이 바뀌면 캐시 전체를 무효화(별도 멀티-DB 캐시는 만들지 않음 — 단순함 우선).
+- 캐시 파일 손상/스키마 불일치 시 조용히 빈 캐시로 폴백(D-013과 동일한 "안전한 기본값" 정책).
+- 캐시 파일에 없는(=이번 실행 결과에 없는) 페이지는 자연히 드롭됨 — 별도 삭제 로직 불필요.
+- `--no-cache` 플래그로 이번 실행만 캐시를 읽지도 쓰지도 않는 완전 우회 옵션 제공.
+
+**구현 단위 (커밋 경계):**
+
+- [x] **Unit 1 — 캐시 저장소 모듈(`specCache.ts`) + 단위 테스트**
+  - 신규 `src/notion/specCache.ts`: `SpecCache { schemaVersion, dataSourceId, entries: Record<pageId, { lastEditedTime, result: CachedBlockResult }> }`, `CachedBlockResult { hasBody, successResponseJson, errorCases }` 타입.
+  - `loadCache(path, dataSourceId)`: 파일 읽기 → JSON.parse → `schemaVersion`/`dataSourceId` 불일치 또는 파싱 실패 시 빈 캐시(`{schemaVersion: CURRENT, dataSourceId, entries: {}}`) 반환.
+  - `saveCache(path, cache)`: JSON.stringify 후 파일 쓰기.
+  - `getCached(cache, pageId, lastEditedTime)`: `entries[pageId]`가 있고 `lastEditedTime`이 일치하면 `result` 반환, 아니면 `undefined`.
+  - 신규 `tests/specCache.test.ts`: 히트/미스(다른 lastEditedTime)/`schemaVersion` 불일치/`dataSourceId` 불일치/손상된 JSON 파일 폴백 케이스.
+  - 커밋: `feat(notion): 페이지별 파싱 결과 로컬 캐시 저장소(specCache) 추가`
+
+- [x] **Unit 2 — pageParser.ts에 캐시 조회/반환 연결**
+  - `parsePage(notion, page, oldCache?)`: 프로퍼티 추출은 항상 새로 실행, `getCached(oldCache, page.id, page.last_edited_time)` 히트 시 `fetchBlockTree` 자체를 건너뛴다.
+  - `PageParseResult`의 성공 케이스에 `cacheHit: boolean`을 포함(`parsePage` 자체는 파일 I/O를 하지 않고 순수하게 유지). ~~`cacheEntry` 필드~~는 Phase 6 Unit 4에서 `spec`과의 데이터 중복이라 제거됨 — `parseAllPages`가 `page.id`/`page.last_edited_time`/`result.spec`의 블록 관련 필드로 캐시 항목을 직접 조립.
+  - `parseAllPages(notion, pages, dataSourceId, oldCache?)`: (최초 작성 시 `dataSourceId` 인자가 계획 문서에서 누락됐었음 — Phase 6 Unit 6에서 정정) 각 페이지 결과로 새 `SpecCache`를 조립해 반환(파일 저장은 안 함), 캐시 적중/미스 개수(`cacheHits`, `cacheMisses`)도 `ParseAllResult`에 포함.
+  - 기존 `pageParser.ts`는 전용 단위 테스트가 없는 오케스트레이터(E2E 검증 대상)라 시그니처 변경에 따른 기존 테스트 영향 없음.
+  - 커밋: `feat(notion): pageParser가 캐시 히트 시 블록 조회를 건너뛰도록 변경`
+
+- [x] **Unit 3 — CLI 통합(`--no-cache` 플래그 + 캐시 로드/저장)**
+  - `index.ts`: Commander에 `--no-cache` boolean 옵션 추가(기본 캐시 사용).
+  - 캐시 파일 경로 상수 `.notion-mock-cache.json`(프로젝트 CWD 기준).
+  - `--no-cache` 미지정 시: `loadCache` → `parseAllPages(notion, pages, dataSourceId, oldCache)` → 결과를 `saveCache`로 저장. `--no-cache` 지정 시: 로드/저장 모두 생략.
+  - 콘솔 출력에 `캐시 적중 N개, 새로 파싱 M개` 요약 추가.
+  - `.gitignore`에 `.notion-mock-cache.json` 추가.
+  - 커밋: `feat: --no-cache 플래그와 캐시 로드/저장을 CLI에 연결`
+
+- [x] **Unit 4 — 검증**
+  - `npm run build` + `npm test`(66개) 통과.
+  - 실 DB(119페이지) 연속 실행 실측: **1회차(캐시 없음) 159초, 적중 0/미스 119** → **2회차(캐시 있음, 무변경) 5초, 적중 119/미스 0** — 약 32배 단축.
+  - 표 행 블록 하나를 실제로 편집(라이브 테스트, 이후 원상복구)한 뒤 3회차 실행 — **4초, 적중 118/미스 1**로 그 페이지만 정확히 재파싱됨을 확인.
+  - `--no-cache` 실행 — **141초, 적중 0/미스 119 (--no-cache 표시)**, 캐시 파일 수정 시각 불변(로드/저장 모두 생략됨) 확인.
+  - 문제 미발견으로 별도 수정 커밋 없음(Phase 3 Unit 4와 동일한 패턴).
+
+**순서**: Unit 1 → Unit 2 → Unit 3 → Unit 4 (각 유닛이 앞 유닛의 타입/함수에 의존).
+
+---
+
+### Phase 6: PR #4 코드 리뷰 대응
+
+**배경**: [PR #4](https://github.com/sjmoon00/mocktion/pull/4)에 대해 Claude 자체 다각도 리뷰(8앵글) + GitHub Copilot을 종합한 `docs/reviews/2026-07-11-phase4-5-warnings-cache-code-review.md`(8개 finding) 작성됨. 신뢰 여부를 채팅으로만 판단하지 않고, 11개 독립 에이전트(finding당 1개 + Finding 1 크래시 주장에 대한 반박 시도 3개)로 실제 현재 소스와 대조 검증 — **8개 finding 전부 CONFIRMED**, Finding 1(크래시)은 3개의 독립 반박 시도가 모두 실패(그중 2개는 Node.js 재현 스크립트로 실측)해 신뢰도가 특히 높음.
+
+**구현 단위 (커밋 경계):**
+
+- [x] **Unit 1 — Finding 1(High) 수정: 캐시 항목 shape 검증 후 손상 시 미스로 취급**
+  - `src/notion/specCache.ts`의 `getCached`: `entry.result`를 반환하기 전에 `hasBody`(boolean)/`successResponseJson`(string)/`errorCases`(Array) 타입을 검증. 하나라도 어긋나면 `undefined`(캐시 미스로 취급 → 자동으로 재파싱되어 자가 치유) 반환. `docs/IMPLEMENTATION_PLAN.md`가 이미 명시한 "캐시 손상 시 조용한 폴백(D-013 정책)"을 entry 레벨까지 확장하는 것.
+  - `tests/specCache.test.ts`에 "lastEditedTime은 일치하지만 result shape가 잘못된 경우 undefined 반환" 케이스 추가.
+  - 커밋: `fix(notion): 캐시 항목 shape 검증 실패 시 미스로 취급해 목서버 크래시 방지`
+
+- [x] **Unit 2 — Finding 2(Medium) 수정: 파싱 경고를 캐시에 저장해 캐시 히트에도 재출력**
+  - `src/notion/responseJsonExtractor.ts`: `console.warn` 직접 호출 2곳을 제거하고, 대신 발생한 경고 문구를 `warnings: string[]`로 모아 반환값에 포함.
+  - `src/notion/errorCaseParser.ts`: 동일하게 `console.warn` 2곳을 `warnings: string[]`로 전환.
+  - `src/notion/pageParser.ts`: `CachedBlockResult`에 `warnings: string[]` 필드 추가, `fetchAndParseBlocks`가 두 함수의 `warnings`를 합쳐 반환.
+  - `src/index.ts`: `parseAllPages` 완료 후, 캐시 히트/미스 무관하게 모든 `spec`(또는 `ParseAllResult`가 노출하는 결과)의 `warnings`를 순회해 콘솔에 출력 — 캐시 히트여도 매 실행마다 동일한 경고가 다시 보이게 됨.
+  - `tests/responseJsonExtractor.test.ts`/`tests/errorCaseParser.test.ts`: 반환값 shape 변경(`warnings` 필드 추가)에 맞춰 기존 단정문 갱신, 경고가 실제로 `warnings` 배열에 담기는지 확인하는 케이스 추가.
+  - 커밋: `fix(notion): 파싱 경고를 캐시에 저장해 캐시 히트 시에도 매번 재출력`
+
+- [x] **Unit 3 — Finding 3(Medium) 수정: 일시적 파싱 실패 시 기존 캐시 항목 보존**
+  - `src/notion/pageParser.ts`의 `parseAllPages`: `result.ok`가 `false`인 페이지(속성 스킵이든 블록 파싱 실패든)라도, `oldCache`에 해당 `page.id`의 기존 항목이 있으면 `newCache`로 그대로 이월. `pages`에 없는(삭제/필터 제외된) 페이지는 애초에 루프를 안 돌므로 자연히 드롭되는 기존 동작과 충돌하지 않음.
+  - 이 유닛은 `pageParser.ts`에 전용 단위 테스트가 없는 기존 관례(오케스트레이터, E2E 검증 대상)를 따름 — Unit 7에서 시나리오 재현으로 확인.
+  - 커밋: `fix(notion): 페이지 파싱이 일시적으로 실패해도 기존 캐시 항목은 보존`
+
+- [x] **Unit 4 — Finding 5(Low) 수정: `PageParseResult`의 `cacheEntry` 중복 제거**
+  - `src/notion/pageParser.ts`: `PageParseResult` 성공 케이스에서 `cacheEntry`를 제거하고 `cacheHit`만 남김. `parseAllPages`가 `page.id`/`page.last_edited_time`/`result.spec`의 세 블록 필드(`hasBody`/`successResponseJson`/`errorCases`, Unit 2에서 `warnings` 포함)로 캐시 항목을 직접 조립.
+  - Unit 2가 `CachedBlockResult` shape를 먼저 확정하므로 Unit 2 이후에 진행.
+  - 커밋: `refactor(notion): PageParseResult의 캐시 데이터 중복 보관 제거`
+
+- [x] **Unit 5 — Finding 6(Low) 수정: 캐시 파일 원자적 쓰기**
+  - `src/notion/specCache.ts`의 `saveCache`: 임시 파일(`${filePath}.tmp`)에 먼저 쓴 뒤 `fs.renameSync`로 교체하는 방식으로 변경.
+  - 커밋: `fix(notion): 캐시 파일을 원자적으로 저장(임시 파일 + rename)`
+
+- [x] **Unit 6 — Finding 7(Low) + Finding 4(Medium, 미검증 전제) 대응: 문서 동기화**
+  - `docs/IMPLEMENTATION_PLAN.md`: Phase 5 Unit 2 설명의 `parseAllPages` 시그니처를 실제 코드(`dataSourceId` 인자 포함, Unit 4 반영 후 최종 형태)에 맞춰 정정.
+  - `docs/DECISIONS.md`: D-016(캐시 유효성 판단 전략 — `schemaVersion`/`dataSourceId`/entry shape 검증 조합) 추가.
+  - `docs/DECISIONS.md`: D-017(파싱 경고를 캐시에 저장해 매 실행 재출력하는 방식, Unit 2 근거) 추가.
+  - `docs/TRADEOFFS.md`: T-010("DB URL 변경 시 멀티-DB 캐시 없이 전체 무효화") 추가.
+  - `docs/TRADEOFFS.md`: T-011(child_page/동기화 블록이 포함된 페이지의 `last_edited_time` 전파는 실측 검증되지 않은 알려진 한계 — 표 행 편집 1건만 검증됨, 현재 실 DB엔 해당 블록 타입 없음을 근거로 리스크 수용) 추가.
+  - 커밋: `docs: Phase 5 캐싱 설계 결정·트레이드오프 기록 및 계획 문서 시그니처 정정`
+
+- [x] **Unit 7 — 검증**
+  - `npm run build` + `npm test`(69개) 매 유닛마다 통과 확인.
+  - **Finding 1 회귀 방지 실측**: 실 캐시 파일(119개 엔트리) 중 1개의 `errorCases`를 문자열로 의도적으로 손상시킨 뒤 실 DB로 실행 — 크래시 없이 **"캐시 적중 118개, 새로 파싱 1개"**로 손상된 항목만 자동 재파싱되고 정상 기동(`목서버 실행 완료`)됨을 확인.
+  - **Finding 2 회귀 방지 실측**: 캐시를 비운 뒤 1회차(콜드, 17개 경고 출력) → 2회차(웜, 캐시 적중 119/119) 연속 실행 — 2회차에서도 1회차와 완전히 동일한 17개 경고가 그대로 재출력됨을 로그로 확인.
+  - **Finding 3 회귀 방지**: 실제 네트워크 장애를 인위적으로 재현하기 어려워(D-015가 429 재시도에 대해 택한 것과 동일한 판단) 실측 대신 코드 추적으로 갈음 — `parseAllPages`의 `else` 분기에서 `oldCache?.entries[page.id]`가 있으면 `newCache`로 이월하는 로직을 11개 독립 에이전트 검증(코드 리뷰 재검증) 및 유닛 테스트 스위트 통과로 확인.
+  - 문제 미발견으로 별도 수정 커밋 없음(Phase 3/5 Unit 4와 동일한 패턴).
+
+**순서**: Unit 1 → Unit 2 → Unit 3 → Unit 4 → Unit 5 → Unit 6 → Unit 7 (Unit 3·5는 Unit 1·2와 파일이 겹치지 않아 순서를 서로 바꿔도 무방하나, Unit 4는 Unit 2 완료 후, Unit 6은 전체 코드 변경 완료 후 진행).
+
 ---
 
 ## 검증 방법

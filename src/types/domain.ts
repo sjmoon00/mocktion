@@ -5,6 +5,7 @@ export interface EndpointSpec {
   hasBody: boolean;
   successResponseJson: string;
   errorCases: ErrorCase[];
+  warnings: string[];
 }
 
 export interface ErrorCase {

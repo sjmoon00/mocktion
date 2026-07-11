@@ -1,4 +1,5 @@
 import { extractTitleText, joinRichText } from './richText';
+import { buildPageContext } from './pageContext';
 
 export interface ExtractedProperties {
   method: string;
@@ -11,15 +12,15 @@ export type PropertyExtractionResult =
   | { ok: true; value: ExtractedProperties }
   | { ok: false; displayName: string; reason: string };
 
-export function extractProperties(properties: Record<string, unknown>): PropertyExtractionResult {
+export function extractProperties(properties: Record<string, unknown>, pageUrl = ''): PropertyExtractionResult {
   const displayName = extractTitleText(properties);
 
-  const method = extractMultiSelectFirst(properties['HTTP Method']);
+  const method = extractMultiSelectFirst(properties['HTTP Method'], 'HTTP Method', displayName, pageUrl);
   if (!method) {
     return { ok: false, displayName, reason: 'HTTP Method 값이 없습니다' };
   }
 
-  const codeText = extractMultiSelectFirst(properties['응답코드']);
+  const codeText = extractMultiSelectFirst(properties['응답코드'], '응답코드', displayName, pageUrl);
   if (!codeText) {
     return { ok: false, displayName, reason: '응답코드 값이 없습니다' };
   }
@@ -36,14 +37,20 @@ export function extractProperties(properties: Record<string, unknown>): Property
   return { ok: true, value: { method, uriPattern, successStatusCode, displayName } };
 }
 
-function extractMultiSelectFirst(prop: unknown): string | undefined {
+function extractMultiSelectFirst(
+  prop: unknown,
+  fieldName: string,
+  displayName: string,
+  pageUrl: string
+): string | undefined {
   const p = prop as { type?: string; multi_select?: { name: string }[] } | undefined;
   if (!p || p.type !== 'multi_select') return undefined;
 
   const values = p.multi_select ?? [];
   if (values.length === 0) return undefined;
   if (values.length > 1) {
-    console.warn(`⚠️  multi_select 값이 2개 이상입니다. 첫 번째 값(${values[0].name})을 사용합니다.`);
+    const context = buildPageContext(displayName, pageUrl, fieldName);
+    console.warn(`⚠️  [${context}] multi_select 값이 2개 이상입니다. 첫 번째 값(${values[0].name})을 사용합니다.`);
   }
   return values[0].name;
 }

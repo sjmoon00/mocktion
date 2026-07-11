@@ -1,37 +1,49 @@
 import type { BlockWithChildren } from './blockParser';
 import { joinRichText } from './richText';
+import { buildPageContext } from './pageContext';
 
 export interface ResponseJsonResult {
   hasBody: boolean;
   successResponseJson: string;
+  warnings: string[];
 }
 
-export function extractResponseJson(blocks: BlockWithChildren[], successStatusCode: number): ResponseJsonResult {
+const SECTION_LABEL = '응답 예시 code 블록';
+
+export function extractResponseJson(
+  blocks: BlockWithChildren[],
+  successStatusCode: number,
+  displayName = '(알 수 없는 페이지)',
+  pageUrl = ''
+): ResponseJsonResult {
   if (successStatusCode === 204) {
-    return { hasBody: false, successResponseJson: '{}' };
+    return { hasBody: false, successResponseJson: '{}', warnings: [] };
   }
 
   const candidates = collectCodeBlocks(blocks)
-    .map((block) => classifyCodeBlockText(getCodeText(block)))
-    .filter((candidate): candidate is string => candidate !== null);
+    .map((block) => ({ id: block.id, text: classifyCodeBlockText(getCodeText(block)) }))
+    .filter((candidate): candidate is { id: string; text: string } => candidate.text !== null);
 
   if (candidates.length === 0) {
-    return { hasBody: false, successResponseJson: '{}' };
+    return { hasBody: false, successResponseJson: '{}', warnings: [] };
   }
+
+  const context = buildPageContext(displayName, pageUrl, SECTION_LABEL, candidates[0].id);
+  const warnings: string[] = [];
 
   if (candidates.length > 1) {
-    console.warn('⚠️  응답 예시 code 블록이 여러 개 발견되어 첫 번째를 사용합니다.');
+    warnings.push(`⚠️  [${context}] 응답 예시 code 블록이 여러 개 발견되어 첫 번째를 사용합니다.`);
   }
 
-  const json = candidates[0];
+  const json = candidates[0].text;
   try {
     JSON.parse(json);
   } catch {
-    console.warn('⚠️  유효하지 않은 JSON입니다. 빈 객체로 대체합니다.');
-    return { hasBody: false, successResponseJson: '{}' };
+    warnings.push(`⚠️  [${context}] 유효하지 않은 JSON입니다. 빈 객체로 대체합니다.`);
+    return { hasBody: false, successResponseJson: '{}', warnings };
   }
 
-  return { hasBody: true, successResponseJson: json };
+  return { hasBody: true, successResponseJson: json, warnings };
 }
 
 function collectCodeBlocks(blocks: BlockWithChildren[]): BlockWithChildren[] {
