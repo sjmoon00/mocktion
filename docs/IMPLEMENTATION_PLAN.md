@@ -264,6 +264,58 @@ notion-mockserver/
 
 ---
 
+### Phase 6: PR #4 코드 리뷰 대응
+
+**배경**: [PR #4](https://github.com/sjmoon00/mocktion/pull/4)에 대해 Claude 자체 다각도 리뷰(8앵글) + GitHub Copilot을 종합한 `docs/reviews/2026-07-11-phase4-5-warnings-cache-code-review.md`(8개 finding) 작성됨. 신뢰 여부를 채팅으로만 판단하지 않고, 11개 독립 에이전트(finding당 1개 + Finding 1 크래시 주장에 대한 반박 시도 3개)로 실제 현재 소스와 대조 검증 — **8개 finding 전부 CONFIRMED**, Finding 1(크래시)은 3개의 독립 반박 시도가 모두 실패(그중 2개는 Node.js 재현 스크립트로 실측)해 신뢰도가 특히 높음.
+
+**구현 단위 (커밋 경계):**
+
+- [x] **Unit 1 — Finding 1(High) 수정: 캐시 항목 shape 검증 후 손상 시 미스로 취급**
+  - `src/notion/specCache.ts`의 `getCached`: `entry.result`를 반환하기 전에 `hasBody`(boolean)/`successResponseJson`(string)/`errorCases`(Array) 타입을 검증. 하나라도 어긋나면 `undefined`(캐시 미스로 취급 → 자동으로 재파싱되어 자가 치유) 반환. `docs/IMPLEMENTATION_PLAN.md`가 이미 명시한 "캐시 손상 시 조용한 폴백(D-013 정책)"을 entry 레벨까지 확장하는 것.
+  - `tests/specCache.test.ts`에 "lastEditedTime은 일치하지만 result shape가 잘못된 경우 undefined 반환" 케이스 추가.
+  - 커밋: `fix(notion): 캐시 항목 shape 검증 실패 시 미스로 취급해 목서버 크래시 방지`
+
+- [ ] **Unit 2 — Finding 2(Medium) 수정: 파싱 경고를 캐시에 저장해 캐시 히트에도 재출력**
+  - `src/notion/responseJsonExtractor.ts`: `console.warn` 직접 호출 2곳을 제거하고, 대신 발생한 경고 문구를 `warnings: string[]`로 모아 반환값에 포함.
+  - `src/notion/errorCaseParser.ts`: 동일하게 `console.warn` 2곳을 `warnings: string[]`로 전환.
+  - `src/notion/pageParser.ts`: `CachedBlockResult`에 `warnings: string[]` 필드 추가, `fetchAndParseBlocks`가 두 함수의 `warnings`를 합쳐 반환.
+  - `src/index.ts`: `parseAllPages` 완료 후, 캐시 히트/미스 무관하게 모든 `spec`(또는 `ParseAllResult`가 노출하는 결과)의 `warnings`를 순회해 콘솔에 출력 — 캐시 히트여도 매 실행마다 동일한 경고가 다시 보이게 됨.
+  - `tests/responseJsonExtractor.test.ts`/`tests/errorCaseParser.test.ts`: 반환값 shape 변경(`warnings` 필드 추가)에 맞춰 기존 단정문 갱신, 경고가 실제로 `warnings` 배열에 담기는지 확인하는 케이스 추가.
+  - 커밋: `fix(notion): 파싱 경고를 캐시에 저장해 캐시 히트 시에도 매번 재출력`
+
+- [ ] **Unit 3 — Finding 3(Medium) 수정: 일시적 파싱 실패 시 기존 캐시 항목 보존**
+  - `src/notion/pageParser.ts`의 `parseAllPages`: `result.ok`가 `false`인 페이지(속성 스킵이든 블록 파싱 실패든)라도, `oldCache`에 해당 `page.id`의 기존 항목이 있으면 `newCache`로 그대로 이월. `pages`에 없는(삭제/필터 제외된) 페이지는 애초에 루프를 안 돌므로 자연히 드롭되는 기존 동작과 충돌하지 않음.
+  - 이 유닛은 `pageParser.ts`에 전용 단위 테스트가 없는 기존 관례(오케스트레이터, E2E 검증 대상)를 따름 — Unit 7에서 시나리오 재현으로 확인.
+  - 커밋: `fix(notion): 페이지 파싱이 일시적으로 실패해도 기존 캐시 항목은 보존`
+
+- [ ] **Unit 4 — Finding 5(Low) 수정: `PageParseResult`의 `cacheEntry` 중복 제거**
+  - `src/notion/pageParser.ts`: `PageParseResult` 성공 케이스에서 `cacheEntry`를 제거하고 `cacheHit`만 남김. `parseAllPages`가 `page.id`/`page.last_edited_time`/`result.spec`의 세 블록 필드(`hasBody`/`successResponseJson`/`errorCases`, Unit 2에서 `warnings` 포함)로 캐시 항목을 직접 조립.
+  - Unit 2가 `CachedBlockResult` shape를 먼저 확정하므로 Unit 2 이후에 진행.
+  - 커밋: `refactor(notion): PageParseResult의 캐시 데이터 중복 보관 제거`
+
+- [ ] **Unit 5 — Finding 6(Low) 수정: 캐시 파일 원자적 쓰기**
+  - `src/notion/specCache.ts`의 `saveCache`: 임시 파일(`${filePath}.tmp`)에 먼저 쓴 뒤 `fs.renameSync`로 교체하는 방식으로 변경.
+  - 커밋: `fix(notion): 캐시 파일을 원자적으로 저장(임시 파일 + rename)`
+
+- [ ] **Unit 6 — Finding 7(Low) + Finding 4(Medium, 미검증 전제) 대응: 문서 동기화**
+  - `docs/IMPLEMENTATION_PLAN.md`: Phase 5 Unit 2 설명의 `parseAllPages` 시그니처를 실제 코드(`dataSourceId` 인자 포함, Unit 4 반영 후 최종 형태)에 맞춰 정정.
+  - `docs/DECISIONS.md`: D-016(캐시 유효성 판단 전략 — `schemaVersion`/`dataSourceId`/entry shape 검증 조합) 추가.
+  - `docs/DECISIONS.md`: D-017(파싱 경고를 캐시에 저장해 매 실행 재출력하는 방식, Unit 2 근거) 추가.
+  - `docs/TRADEOFFS.md`: T-010("DB URL 변경 시 멀티-DB 캐시 없이 전체 무효화") 추가.
+  - `docs/TRADEOFFS.md`: T-011(child_page/동기화 블록이 포함된 페이지의 `last_edited_time` 전파는 실측 검증되지 않은 알려진 한계 — 표 행 편집 1건만 검증됨, 현재 실 DB엔 해당 블록 타입 없음을 근거로 리스크 수용) 추가.
+  - 커밋: `docs: Phase 5 캐싱 설계 결정·트레이드오프 기록 및 계획 문서 시그니처 정정`
+
+- [ ] **Unit 7 — 검증**
+  - `npm run build` + `npm test` 전체 통과.
+  - 손상된 shape의 캐시 파일(예: `errorCases`를 문자열로 오염)을 수동으로 만든 뒤 실행 — 크래시하지 않고 해당 페이지가 재파싱되는지 확인(Finding 1 회귀 방지).
+  - 캐시가 있는 상태로 재실행해, 이전에 경고가 났던 페이지의 경고가 이번에도 다시 출력되는지 확인(Finding 2 회귀 방지).
+  - 페이지 파싱을 인위적으로 1회 실패시킨 뒤(예: 네트워크 차단 시뮬레이션이 어려우면 코드 레벨 임시 변경으로 재현) 캐시 파일에 해당 페이지 항목이 남아있는지 확인(Finding 3 회귀 방지).
+  - 문제 발견 시에만 별도 수정 커밋.
+
+**순서**: Unit 1 → Unit 2 → Unit 3 → Unit 4 → Unit 5 → Unit 6 → Unit 7 (Unit 3·5는 Unit 1·2와 파일이 겹치지 않아 순서를 서로 바꿔도 무방하나, Unit 4는 Unit 2 완료 후, Unit 6은 전체 코드 변경 완료 후 진행).
+
+---
+
 ## 검증 방법
 
 - **단위**: `npm test` — 실 Notion 응답 fixture로 파서 회귀 검증

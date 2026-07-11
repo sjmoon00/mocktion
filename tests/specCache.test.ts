@@ -71,4 +71,15 @@ describe('getCached', () => {
 
     expect(getCached(cache, 'unknown', 't1')).toBeUndefined();
   });
+
+  it('lastEditedTime은 일치하지만 result shape가 잘못되면 undefined를 반환한다', () => {
+    const cache = createEmptyCache('ds-1');
+    cache.entries['page-1'] = {
+      lastEditedTime: 't1',
+      // errorCases가 배열이 아닌 손상된 shape
+      result: { hasBody: true, successResponseJson: '{}', errorCases: 'not-an-array' } as never,
+    };
+
+    expect(getCached(cache, 'page-1', 't1')).toBeUndefined();
+  });
 });

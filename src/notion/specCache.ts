@@ -49,5 +49,11 @@ export function saveCache(filePath: string, cache: SpecCache): void {
 export function getCached(cache: SpecCache, pageId: string, lastEditedTime: string): CachedBlockResult | undefined {
   const entry = cache.entries[pageId];
   if (!entry || entry.lastEditedTime !== lastEditedTime) return undefined;
-  return entry.result;
+
+  const r = entry.result;
+  if (typeof r?.hasBody !== 'boolean' || typeof r?.successResponseJson !== 'string' || !Array.isArray(r?.errorCases)) {
+    return undefined;
+  }
+
+  return r;
 }
