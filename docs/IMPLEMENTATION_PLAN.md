@@ -288,7 +288,7 @@ notion-mockserver/
   - 이 유닛은 `pageParser.ts`에 전용 단위 테스트가 없는 기존 관례(오케스트레이터, E2E 검증 대상)를 따름 — Unit 7에서 시나리오 재현으로 확인.
   - 커밋: `fix(notion): 페이지 파싱이 일시적으로 실패해도 기존 캐시 항목은 보존`
 
-- [ ] **Unit 4 — Finding 5(Low) 수정: `PageParseResult`의 `cacheEntry` 중복 제거**
+- [x] **Unit 4 — Finding 5(Low) 수정: `PageParseResult`의 `cacheEntry` 중복 제거**
   - `src/notion/pageParser.ts`: `PageParseResult` 성공 케이스에서 `cacheEntry`를 제거하고 `cacheHit`만 남김. `parseAllPages`가 `page.id`/`page.last_edited_time`/`result.spec`의 세 블록 필드(`hasBody`/`successResponseJson`/`errorCases`, Unit 2에서 `warnings` 포함)로 캐시 항목을 직접 조립.
   - Unit 2가 `CachedBlockResult` shape를 먼저 확정하므로 Unit 2 이후에 진행.
   - 커밋: `refactor(notion): PageParseResult의 캐시 데이터 중복 보관 제거`

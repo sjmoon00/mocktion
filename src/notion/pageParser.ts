@@ -7,12 +7,7 @@ import { extractErrorCases } from './errorCaseParser';
 import { createEmptyCache, getCached, type CachedBlockResult, type SpecCache } from './specCache';
 
 export type PageParseResult =
-  | {
-      ok: true;
-      spec: EndpointSpec;
-      cacheEntry: { pageId: string; lastEditedTime: string; result: CachedBlockResult };
-      cacheHit: boolean;
-    }
+  | { ok: true; spec: EndpointSpec; cacheHit: boolean }
   | { ok: false; displayName: string; reason: string };
 
 export interface PropertySkip {
@@ -49,7 +44,6 @@ export async function parsePage(
     return {
       ok: true,
       spec: { method, uriPattern, successStatusCode, ...blockResult },
-      cacheEntry: { pageId: page.id, lastEditedTime, result: blockResult },
       cacheHit: cached !== undefined,
     };
   } catch (e) {
@@ -95,8 +89,11 @@ export async function parseAllPages(
     const result = await parsePage(notion, page, oldCache);
     if (result.ok) {
       specs.push(result.spec);
-      const { pageId, lastEditedTime, result: blockResult } = result.cacheEntry;
-      newCache.entries[pageId] = { lastEditedTime, result: blockResult };
+      const { hasBody, successResponseJson, errorCases, warnings } = result.spec;
+      newCache.entries[page.id] = {
+        lastEditedTime: page.last_edited_time,
+        result: { hasBody, successResponseJson, errorCases, warnings },
+      };
       result.cacheHit ? cacheHits++ : cacheMisses++;
     } else {
       propertySkipped.push({ displayName: result.displayName, reason: result.reason });
